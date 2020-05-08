@@ -42,6 +42,9 @@ namespace Azure.Core.TestFramework
             }
 
             message.Response = GetResponse(_session.Lookup(message.Request, _matcher, _sanitizer));
+
+            // Copy the ClientRequestId like the HTTP transport.
+            message.Response.ClientRequestId = message.Request.ClientRequestId;
         }
 
         public override async ValueTask ProcessAsync(HttpMessage message)
@@ -60,6 +63,9 @@ namespace Azure.Core.TestFramework
             }
 
             message.Response = GetResponse(_session.Lookup(message.Request, _matcher, _sanitizer));
+
+            // Copy the ClientRequestId like the HTTP transport.
+            message.Response.ClientRequestId = message.Request.ClientRequestId;
         }
 
         public override Request CreateRequest()
