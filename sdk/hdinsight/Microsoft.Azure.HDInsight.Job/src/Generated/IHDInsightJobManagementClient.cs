@@ -73,5 +73,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// </summary>
         IJobOperations Job { get; }
 
+        /// <summary>
+        /// Gets the ISparkBatchOperations.
+        /// </summary>
+        ISparkBatchOperations SparkBatch { get; }
+
+        /// <summary>
+        /// Gets the ISparkSessionOperations.
+        /// </summary>
+        ISparkSessionOperations SparkSession { get; }
+
     }
 }

@@ -165,7 +165,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
         public CommonTestsFixture()
         {
             var context = MockContext.Start(this.GetType(), ".ctor");
-            this.Initialize(context);
+            //this.Initialize(context);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             try 
             {
                 context = contextToUse;
-                Location = "North Central US";
+                Location = "East US";
                 HDInsightClusterType = "Hadoop";
                 WorkNodeSize = "Large";
                 HDInsightClusterVersion = "3.6";

@@ -80,6 +80,16 @@ namespace Microsoft.Azure.HDInsight.Job
         public virtual IJobOperations Job { get; private set; }
 
         /// <summary>
+        /// Gets the ISparkBatchOperations.
+        /// </summary>
+        public virtual ISparkBatchOperations SparkBatch { get; private set; }
+
+        /// <summary>
+        /// Gets the ISparkSessionOperations.
+        /// </summary>
+        public virtual ISparkSessionOperations SparkSession { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the HDInsightJobManagementClient class.
         /// </summary>
         /// <param name='httpClient'>
@@ -207,6 +217,8 @@ namespace Microsoft.Azure.HDInsight.Job
         private void Initialize()
         {
             Job = new JobOperations(this);
+            SparkBatch = new SparkBatchOperations(this);
+            SparkSession = new SparkSessionOperations(this);
             BaseUri = "https://{clusterDnsName}";
             AcceptLanguage = "en-US";
             LongRunningOperationRetryTimeout = 30;

@@ -52,5 +52,20 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             client.Username = CultureInfo.CurrentCulture.TextInfo.ToLower(credentials.UserName);
             return client;
         }
+
+        public static HDInsightJobManagementClient GetHDInsightLivyJobManagementClient(this CommonTestsFixture testFixture, MockContext context)
+        {
+            var credentials = new BasicAuthenticationCredentials
+            {
+                UserName = "sshroot",
+                Password = "Password1!"
+            };
+
+            TestEnvironment currentEnvironment = TestEnvironmentFactory.GetTestEnvironment();
+            var client = context.GetServiceClientWithCredentials<HDInsightJobManagementClient>(currentEnvironment, credentials, true);
+            client.ClusterDnsName = "shangwei-hdi-cmk-ps.azurehdinsight.net";
+            client.Username = CultureInfo.CurrentCulture.TextInfo.ToLower(credentials.UserName);
+            return client;
+        }
     }
 }
