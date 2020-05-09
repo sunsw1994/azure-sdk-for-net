@@ -69,12 +69,14 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
-            public static LivyBatchResponse Create(this ISparkBatchOperations operations, LivyBatchRequest livyRequest)
+            public static LivyBatchResponse Create(this ISparkBatchOperations operations, string xRequestedBy, LivyBatchRequest livyRequest)
             {
-                return operations.CreateAsync(livyRequest).GetAwaiter().GetResult();
+                return operations.CreateAsync(xRequestedBy, livyRequest).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -83,15 +85,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyBatchResponse> CreateAsync(this ISparkBatchOperations operations, LivyBatchRequest livyRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<LivyBatchResponse> CreateAsync(this ISparkBatchOperations operations, string xRequestedBy, LivyBatchRequest livyRequest, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(livyRequest, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateWithHttpMessagesAsync(xRequestedBy, livyRequest, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -137,12 +141,14 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            public static void Delete(this ISparkBatchOperations operations, int batchId)
+            public static void Delete(this ISparkBatchOperations operations, string xRequestedBy, int batchId)
             {
-                operations.DeleteAsync(batchId).GetAwaiter().GetResult();
+                operations.DeleteAsync(xRequestedBy, batchId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -151,15 +157,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteAsync(this ISparkBatchOperations operations, string xRequestedBy, int batchId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.DeleteWithHttpMessagesAsync(batchId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.DeleteWithHttpMessagesAsync(xRequestedBy, batchId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>

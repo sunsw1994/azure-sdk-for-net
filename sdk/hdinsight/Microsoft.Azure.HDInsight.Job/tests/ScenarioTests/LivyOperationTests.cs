@@ -41,10 +41,75 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var context = MockContext.Start(this.GetType()))
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
-                var response = client.SparkBatch.List();
+                var originalResponse = client.SparkBatch.List();
+                Assert.NotNull(originalResponse);
+
+                LivyBatchRequest creatRequest = new LivyBatchRequest
+                {
+                    File = "wasbs:///example/jars/spark-examples.jar",
+                    ClassName = "org.apache.spark.examples.SparkPi",
+                    Args = new List<string>(){"10"}
+                };
+                var creatResponse = client.SparkBatch.Create("admin", creatRequest);
+                Assert.NotNull(creatResponse);
+                Assert.Equal("starting", creatResponse.State);
+
+                var checkResponse = client.SparkBatch.List();
+                Assert.NotNull(checkResponse);
+                Assert.Equal(originalResponse.Total+1, checkResponse.Total);
+
+                var specifySizeResponse = originalResponse = client.SparkBatch.List(1,0);
+                Assert.NotNull(checkResponse);
+                Assert.Equal(1, specifySizeResponse.FromProperty);
+                Assert.Equal(0, specifySizeResponse.Sessions.Count);
+            }
+        }
+
+        [Fact]
+        public void GetJobsSparkBatch()
+        {
+            using (var context = MockContext.Start(this.GetType()))
+            using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
+            {
+                LivyBatchRequest creatRequest = new LivyBatchRequest
+                {
+                    File = "wasbs:///example/jars/spark-examples.jar",
+                    ClassName = "org.apache.spark.examples.SparkPi",
+                    Args = new List<string>() { "10" }
+                };
+                var creatResponse = client.SparkBatch.Create("admin", creatRequest);
+                Assert.NotNull(creatResponse);
+                Assert.Equal("starting", creatResponse.State);
+
+                var response = client.SparkBatch.Get((int)creatResponse.Id);
                 Assert.NotNull(response);
-                int? originalJobCount = response.Total;
-                Assert.Equal(0, originalJobCount);
+            }
+        }
+
+        [Fact]
+        public void DeleteJobsSparkBatch()
+        {
+            using (var context = MockContext.Start(this.GetType()))
+            using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
+            {
+                LivyBatchRequest creatRequest = new LivyBatchRequest
+                {
+                    File = "wasbs:///example/jars/spark-examples.jar",
+                    ClassName = "org.apache.spark.examples.SparkPi",
+                    Args = new List<string>() { "10" }
+                };
+                var creatResponse = client.SparkBatch.Create("admin", creatRequest);
+                Assert.NotNull(creatResponse);
+                Assert.Equal("starting", creatResponse.State);
+
+                var originalResponse = client.SparkBatch.List();
+                Assert.NotNull(originalResponse);
+
+                client.SparkBatch.Delete("admin",(int)creatResponse.Id);
+
+                var checkResponse = client.SparkBatch.List();
+                Assert.NotNull(checkResponse);
+                Assert.Equal(originalResponse.Total-1, checkResponse.Total);
             }
         }
     }

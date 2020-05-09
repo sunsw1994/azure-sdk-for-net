@@ -52,6 +52,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create new spark batch job.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='livyRequest'>
         /// Livy compatible batch job request payload.
         /// </param>
@@ -70,7 +72,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyBatchResponse>> CreateWithHttpMessagesAsync(LivyBatchRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<LivyBatchResponse>> CreateWithHttpMessagesAsync(string xRequestedBy, LivyBatchRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch job.
         /// </summary>
@@ -96,6 +98,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Cancels a running spark batch job.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
@@ -111,7 +115,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string xRequestedBy, int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch job logs.
         /// </summary>
