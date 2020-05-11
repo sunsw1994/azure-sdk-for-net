@@ -240,6 +240,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create new spark session.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='livyRequest'>
         /// Livy compatible session job request payload.
         /// </param>
@@ -264,11 +266,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(LivySessionRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(string xRequestedBy, LivySessionRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
+            }
+            if (xRequestedBy == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             if (livyRequest == null)
             {
@@ -281,6 +287,7 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("xRequestedBy", xRequestedBy);
                 tracingParameters.Add("livyRequest", livyRequest);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Create", tracingParameters);
@@ -303,6 +310,14 @@ namespace Microsoft.Azure.HDInsight.Job
             if (Client.GenerateClientRequestId != null && Client.GenerateClientRequestId.Value)
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
+            }
+            if (xRequestedBy != null)
+            {
+                if (_httpRequest.Headers.Contains("X-Requested-By"))
+                {
+                    _httpRequest.Headers.Remove("X-Requested-By");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -354,7 +369,7 @@ namespace Microsoft.Azure.HDInsight.Job
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200)
+            if ((int)_statusCode != 201)
             {
                 var ex = new CloudException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
@@ -397,7 +412,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _result.RequestId = _httpResponse.Headers.GetValues("x-ms-request-id").FirstOrDefault();
             }
             // Deserialize Response
-            if ((int)_statusCode == 200)
+            if ((int)_statusCode == 201)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -599,6 +614,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Cancels a running spark session.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -620,11 +637,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string xRequestedBy, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
+            }
+            if (xRequestedBy == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -633,6 +654,7 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("xRequestedBy", xRequestedBy);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
@@ -656,6 +678,14 @@ namespace Microsoft.Azure.HDInsight.Job
             if (Client.GenerateClientRequestId != null && Client.GenerateClientRequestId.Value)
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
+            }
+            if (xRequestedBy != null)
+            {
+                if (_httpRequest.Headers.Contains("X-Requested-By"))
+                {
+                    _httpRequest.Headers.Remove("X-Requested-By");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -1295,6 +1325,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create statement within a spark session.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -1322,11 +1354,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(int sessionId, LivyStatementRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(string xRequestedBy, int sessionId, LivyStatementRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
+            }
+            if (xRequestedBy == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             if (livyRequest == null)
             {
@@ -1339,6 +1375,7 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("xRequestedBy", xRequestedBy);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("livyRequest", livyRequest);
                 tracingParameters.Add("cancellationToken", cancellationToken);
@@ -1363,6 +1400,14 @@ namespace Microsoft.Azure.HDInsight.Job
             if (Client.GenerateClientRequestId != null && Client.GenerateClientRequestId.Value)
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
+            }
+            if (xRequestedBy != null)
+            {
+                if (_httpRequest.Headers.Contains("X-Requested-By"))
+                {
+                    _httpRequest.Headers.Remove("X-Requested-By");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -1414,7 +1459,7 @@ namespace Microsoft.Azure.HDInsight.Job
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200)
+            if ((int)_statusCode != 201)
             {
                 var ex = new CloudException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
@@ -1457,7 +1502,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _result.RequestId = _httpResponse.Headers.GetValues("x-ms-request-id").FirstOrDefault();
             }
             // Deserialize Response
-            if ((int)_statusCode == 200)
+            if ((int)_statusCode == 201)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1664,6 +1709,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Kill a statement within a session.
         /// </summary>
+        /// <param name='xRequestedBy'>
+        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -1691,11 +1738,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(string xRequestedBy, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
+            }
+            if (xRequestedBy == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1704,6 +1755,7 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
+                tracingParameters.Add("xRequestedBy", xRequestedBy);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("statementId", statementId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
@@ -1729,6 +1781,14 @@ namespace Microsoft.Azure.HDInsight.Job
             if (Client.GenerateClientRequestId != null && Client.GenerateClientRequestId.Value)
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
+            }
+            if (xRequestedBy != null)
+            {
+                if (_httpRequest.Headers.Contains("X-Requested-By"))
+                {
+                    _httpRequest.Headers.Remove("X-Requested-By");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
