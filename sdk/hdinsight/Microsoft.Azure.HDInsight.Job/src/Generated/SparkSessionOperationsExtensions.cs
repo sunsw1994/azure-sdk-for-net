@@ -69,14 +69,14 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible session job request payload.
             /// </param>
-            public static LivySessionResponse Create(this ISparkSessionOperations operations, string xRequestedBy, LivySessionRequest livyRequest)
+            /// <param name='xRequestedBy'>
+            /// </param>
+            public static LivySessionResponse Create(this ISparkSessionOperations operations, LivySessionRequest livyRequest, string xRequestedBy = default(string))
             {
-                return operations.CreateAsync(xRequestedBy, livyRequest).GetAwaiter().GetResult();
+                return operations.CreateAsync(livyRequest, xRequestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -85,17 +85,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible session job request payload.
+            /// </param>
+            /// <param name='xRequestedBy'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivySessionResponse> CreateAsync(this ISparkSessionOperations operations, string xRequestedBy, LivySessionRequest livyRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<LivySessionResponse> CreateAsync(this ISparkSessionOperations operations, LivySessionRequest livyRequest, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(xRequestedBy, livyRequest, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateWithHttpMessagesAsync(livyRequest, xRequestedBy, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -141,14 +141,14 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            public static void Delete(this ISparkSessionOperations operations, string xRequestedBy, int sessionId)
+            /// <param name='xRequestedBy'>
+            /// </param>
+            public static void Delete(this ISparkSessionOperations operations, int sessionId, string xRequestedBy = default(string))
             {
-                operations.DeleteAsync(xRequestedBy, sessionId).GetAwaiter().GetResult();
+                operations.DeleteAsync(sessionId, xRequestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -157,17 +157,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
+            /// </param>
+            /// <param name='xRequestedBy'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteAsync(this ISparkSessionOperations operations, string xRequestedBy, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteAsync(this ISparkSessionOperations operations, int sessionId, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.DeleteWithHttpMessagesAsync(xRequestedBy, sessionId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.DeleteWithHttpMessagesAsync(sessionId, xRequestedBy, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -292,17 +292,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
-            public static LivyStatementResponse CreateStatements(this ISparkSessionOperations operations, string xRequestedBy, int sessionId, LivyStatementRequest livyRequest)
+            /// <param name='xRequestedBy'>
+            /// </param>
+            public static LivyStatementResponse CreateStatements(this ISparkSessionOperations operations, int sessionId, LivyStatementRequest livyRequest, string xRequestedBy = default(string))
             {
-                return operations.CreateStatementsAsync(xRequestedBy, sessionId, livyRequest).GetAwaiter().GetResult();
+                return operations.CreateStatementsAsync(sessionId, livyRequest, xRequestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -311,20 +311,20 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='livyRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementResponse> CreateStatementsAsync(this ISparkSessionOperations operations, string xRequestedBy, int sessionId, LivyStatementRequest livyRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<LivyStatementResponse> CreateStatementsAsync(this ISparkSessionOperations operations, int sessionId, LivyStatementRequest livyRequest, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateStatementsWithHttpMessagesAsync(xRequestedBy, sessionId, livyRequest, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateStatementsWithHttpMessagesAsync(sessionId, livyRequest, xRequestedBy, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -376,17 +376,17 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='statementId'>
             /// Identifier for the statement.
             /// </param>
-            public static LivyStatementCancellationResponse DeleteStatements(this ISparkSessionOperations operations, string xRequestedBy, int sessionId, int statementId)
+            /// <param name='xRequestedBy'>
+            /// </param>
+            public static LivyStatementCancellationResponse DeleteStatements(this ISparkSessionOperations operations, int sessionId, int statementId, string xRequestedBy = default(string))
             {
-                return operations.DeleteStatementsAsync(xRequestedBy, sessionId, statementId).GetAwaiter().GetResult();
+                return operations.DeleteStatementsAsync(sessionId, statementId, xRequestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -395,20 +395,20 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='xRequestedBy'>
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='statementId'>
             /// Identifier for the statement.
             /// </param>
+            /// <param name='xRequestedBy'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementCancellationResponse> DeleteStatementsAsync(this ISparkSessionOperations operations, string xRequestedBy, int sessionId, int statementId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<LivyStatementCancellationResponse> DeleteStatementsAsync(this ISparkSessionOperations operations, int sessionId, int statementId, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeleteStatementsWithHttpMessagesAsync(xRequestedBy, sessionId, statementId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.DeleteStatementsWithHttpMessagesAsync(sessionId, statementId, xRequestedBy, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

@@ -50,7 +50,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     ClassName = "org.apache.spark.examples.SparkPi",
                     Args = new List<string>(){"10"}
                 };
-                var createResponse = client.SparkBatch.Create("admin", createRequest);
+                var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
 
@@ -77,7 +77,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     ClassName = "org.apache.spark.examples.SparkPi",
                     Args = new List<string>() { "10" }
                 };
-                var createResponse = client.SparkBatch.Create("admin", createRequest);
+                var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
 
@@ -98,14 +98,14 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     ClassName = "org.apache.spark.examples.SparkPi",
                     Args = new List<string>() { "10" }
                 };
-                var createResponse = client.SparkBatch.Create("admin", createRequest);
+                var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
 
                 var originalResponse = client.SparkBatch.List();
                 Assert.NotNull(originalResponse);
 
-                client.SparkBatch.Delete("admin",(int)createResponse.Id);
+                client.SparkBatch.Delete((int)createResponse.Id);
 
                 var checkResponse = client.SparkBatch.List();
                 Assert.NotNull(checkResponse);
@@ -127,7 +127,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     Kind = "spark"
                 };
 
-                var createResponse = client.SparkSession.Create("admin", createRequest);
+                var createResponse = client.SparkSession.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
                 TestUtilities.Wait(10000);
@@ -141,7 +141,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 Assert.Equal(1, specifySizeResponse.FromProperty);
                 Assert.Equal(0, specifySizeResponse.Sessions.Count);
 
-                client.SparkSession.Delete("admin", (int)createResponse.Id);
+                client.SparkSession.Delete((int)createResponse.Id);
             }
         }
 
@@ -155,7 +155,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 {
                     Kind = "spark"
                 };
-                var createResponse = client.SparkSession.Create("admin", createRequest);
+                var createResponse = client.SparkSession.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
                 TestUtilities.Wait(10000);
@@ -163,7 +163,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 var response = client.SparkSession.Get((int)createResponse.Id);
                 Assert.NotNull(response);
 
-                client.SparkSession.Delete("admin", (int)createResponse.Id);
+                client.SparkSession.Delete((int)createResponse.Id);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 {
                     Kind = "spark"
                 };
-                var createResponse = client.SparkSession.Create("admin", createRequest);
+                var createResponse = client.SparkSession.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
 
@@ -186,7 +186,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 Assert.NotNull(originalResponse);
 
                 //delete session
-                client.SparkSession.Delete("admin", (int)createResponse.Id);
+                client.SparkSession.Delete((int)createResponse.Id);
 
                 var checkResponse = client.SparkSession.List();
                 Assert.NotNull(checkResponse);
@@ -206,7 +206,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     Kind = "spark"
                 };
 
-                var createResponse = client.SparkSession.Create("admin", createRequest);
+                var createResponse = client.SparkSession.Create(createRequest);
                 Assert.NotNull(createResponse);
                 Assert.Equal("starting", createResponse.State);
                 TestUtilities.Wait(10000);
@@ -220,7 +220,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                     Code = "1+1"
                 };
 
-                var statementResponse = client.SparkSession.CreateStatements("admin", (int)createResponse.Id, statementRequest);
+                var statementResponse = client.SparkSession.CreateStatements((int)createResponse.Id, statementRequest);
                 Assert.NotNull(statementResponse);
                 Assert.Equal("waiting", statementResponse.State);
 
@@ -230,11 +230,11 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 TestUtilities.Wait(10000);
 
                 //delete statements
-                var cancelResponse = client.SparkSession.DeleteStatements("admin",(int)createResponse.Id, (int)statementResponse.Id);
+                var cancelResponse = client.SparkSession.DeleteStatements((int)createResponse.Id, (int)statementResponse.Id);
                 Assert.Equal("canceled", cancelResponse.Msg);
                 
                 //delete session
-                client.SparkSession.Delete("admin", (int)createResponse.Id);
+                client.SparkSession.Delete((int)createResponse.Id);
             }
         }
     }

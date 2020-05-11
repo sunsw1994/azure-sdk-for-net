@@ -240,10 +240,10 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create new spark batch job.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='livyRequest'>
         /// Livy compatible batch job request payload.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -266,15 +266,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyBatchResponse>> CreateWithHttpMessagesAsync(string xRequestedBy, LivyBatchRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivyBatchResponse>> CreateWithHttpMessagesAsync(LivyBatchRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             if (livyRequest == null)
             {
@@ -614,10 +610,10 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Cancels a running spark batch job.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -637,15 +633,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string xRequestedBy, int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int batchId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;

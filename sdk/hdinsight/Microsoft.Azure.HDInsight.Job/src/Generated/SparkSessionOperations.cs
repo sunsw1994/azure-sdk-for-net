@@ -240,10 +240,10 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create new spark session.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='livyRequest'>
         /// Livy compatible session job request payload.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -266,15 +266,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(string xRequestedBy, LivySessionRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(LivySessionRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             if (livyRequest == null)
             {
@@ -614,10 +610,10 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Cancels a running spark session.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -637,15 +633,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string xRequestedBy, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1325,13 +1317,13 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create statement within a spark session.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
         /// <param name='livyRequest'>
         /// Livy compatible batch job request payload.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1354,15 +1346,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(string xRequestedBy, int sessionId, LivyStatementRequest livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(int sessionId, LivyStatementRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             if (livyRequest == null)
             {
@@ -1709,13 +1697,13 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Kill a statement within a session.
         /// </summary>
-        /// <param name='xRequestedBy'>
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
         /// <param name='statementId'>
         /// Identifier for the statement.
+        /// </param>
+        /// <param name='xRequestedBy'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1738,15 +1726,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(string xRequestedBy, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(int sessionId, int statementId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
-            }
-            if (xRequestedBy == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "xRequestedBy");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
