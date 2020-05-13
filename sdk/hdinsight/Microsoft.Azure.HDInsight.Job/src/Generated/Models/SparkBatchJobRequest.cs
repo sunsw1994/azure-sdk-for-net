@@ -15,36 +15,37 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivySessionRequest
+    public partial class SparkBatchJobRequest
     {
         /// <summary>
-        /// Initializes a new instance of the LivySessionRequest class.
+        /// Initializes a new instance of the SparkBatchJobRequest class.
         /// </summary>
-        public LivySessionRequest()
+        public SparkBatchJobRequest()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivySessionRequest class.
+        /// Initializes a new instance of the SparkBatchJobRequest class.
         /// </summary>
-        public LivySessionRequest(object kind = default(object), string proxyUser = default(string), IList<string> jars = default(IList<string>), IList<string> pyFiles = default(IList<string>), IList<string> files = default(IList<string>), string driverMemory = default(string), int? driverCores = default(int?), string executorMemory = default(string), int? executorCores = default(int?), int? numExecutors = default(int?), IList<string> archives = default(IList<string>), string queue = default(string), string name = default(string), IDictionary<string, string> conf = default(IDictionary<string, string>), int? heartbeatTimeoutInSecond = default(int?))
+        public SparkBatchJobRequest(string file = default(string), string proxyUser = default(string), string className = default(string), IList<string> arguments = default(IList<string>), IList<string> jars = default(IList<string>), IList<string> pythonFiles = default(IList<string>), IList<string> files = default(IList<string>), string driverMemory = default(string), int? driverCores = default(int?), string executorMemory = default(string), int? executorCores = default(int?), int? executorCount = default(int?), IList<string> archives = default(IList<string>), string queue = default(string), string name = default(string), IDictionary<string, string> configuration = default(IDictionary<string, string>))
         {
-            Kind = kind;
+            File = file;
             ProxyUser = proxyUser;
+            ClassName = className;
+            Arguments = arguments;
             Jars = jars;
-            PyFiles = pyFiles;
+            PythonFiles = pythonFiles;
             Files = files;
             DriverMemory = driverMemory;
             DriverCores = driverCores;
             ExecutorMemory = executorMemory;
             ExecutorCores = executorCores;
-            NumExecutors = numExecutors;
+            ExecutorCount = executorCount;
             Archives = archives;
             Queue = queue;
             Name = name;
-            Conf = conf;
-            HeartbeatTimeoutInSecond = heartbeatTimeoutInSecond;
+            Configuration = configuration;
             CustomInit();
         }
 
@@ -55,13 +56,23 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "kind")]
-        public object Kind { get; set; }
+        [JsonProperty(PropertyName = "file")]
+        public string File { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "proxyUser")]
         public string ProxyUser { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "className")]
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "args")]
+        public IList<string> Arguments { get; set; }
 
         /// <summary>
         /// </summary>
@@ -71,7 +82,7 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "pyFiles")]
-        public IList<string> PyFiles { get; set; }
+        public IList<string> PythonFiles { get; set; }
 
         /// <summary>
         /// </summary>
@@ -101,7 +112,7 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "numExecutors")]
-        public int? NumExecutors { get; set; }
+        public int? ExecutorCount { get; set; }
 
         /// <summary>
         /// </summary>
@@ -121,12 +132,7 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "conf")]
-        public IDictionary<string, string> Conf { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "heartbeatTimeoutInSecond")]
-        public int? HeartbeatTimeoutInSecond { get; set; }
+        public IDictionary<string, string> Configuration { get; set; }
 
     }
 }

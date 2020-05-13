@@ -15,27 +15,27 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivySessionResponse
+    public partial class SparkSessionJob
     {
         /// <summary>
-        /// Initializes a new instance of the LivySessionResponse class.
+        /// Initializes a new instance of the SparkSessionJob class.
         /// </summary>
-        public LivySessionResponse()
+        public SparkSessionJob()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivySessionResponse class.
+        /// Initializes a new instance of the SparkSessionJob class.
         /// </summary>
-        public LivySessionResponse(int? id = default(int?), string appId = default(string), string owner = default(string), string proxyUser = default(string), string kind = default(string), IList<string> log = default(IList<string>), string state = default(string), IDictionary<string, string> appInfo = default(IDictionary<string, string>))
+        public SparkSessionJob(int? id = default(int?), string appId = default(string), string owner = default(string), string proxyUser = default(string), string kind = default(string), IList<string> logLines = default(IList<string>), string state = default(string), IDictionary<string, string> appInfo = default(IDictionary<string, string>))
         {
             Id = id;
             AppId = appId;
             Owner = owner;
             ProxyUser = proxyUser;
             Kind = kind;
-            Log = log;
+            LogLines = logLines;
             State = state;
             AppInfo = appInfo;
             CustomInit();
@@ -74,7 +74,7 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "log")]
-        public IList<string> Log { get; set; }
+        public IList<string> LogLines { get; set; }
 
         /// <summary>
         /// </summary>

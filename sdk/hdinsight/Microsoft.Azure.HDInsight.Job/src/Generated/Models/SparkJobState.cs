@@ -13,24 +13,23 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class LivyStatementOutput
+    public partial class SparkJobState
     {
         /// <summary>
-        /// Initializes a new instance of the LivyStatementOutput class.
+        /// Initializes a new instance of the SparkJobState class.
         /// </summary>
-        public LivyStatementOutput()
+        public SparkJobState()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyStatementOutput class.
+        /// Initializes a new instance of the SparkJobState class.
         /// </summary>
-        public LivyStatementOutput(string status = default(string), int? executionCount = default(int?), object data = default(object))
+        public SparkJobState(int? id = default(int?), string state = default(string))
         {
-            Status = status;
-            ExecutionCount = executionCount;
-            Data = data;
+            Id = id;
+            State = state;
             CustomInit();
         }
 
@@ -41,18 +40,13 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "status")]
-        public string Status { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public int? Id { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "execution_count")]
-        public int? ExecutionCount { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "data")]
-        public object Data { get; set; }
+        [JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
 
     }
 }

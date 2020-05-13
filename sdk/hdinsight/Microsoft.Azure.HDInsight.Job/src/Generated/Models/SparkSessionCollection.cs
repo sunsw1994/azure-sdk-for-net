@@ -15,20 +15,20 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyListBatchResponse
+    public partial class SparkSessionCollection
     {
         /// <summary>
-        /// Initializes a new instance of the LivyListBatchResponse class.
+        /// Initializes a new instance of the SparkSessionCollection class.
         /// </summary>
-        public LivyListBatchResponse()
+        public SparkSessionCollection()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyListBatchResponse class.
+        /// Initializes a new instance of the SparkSessionCollection class.
         /// </summary>
-        public LivyListBatchResponse(int? fromProperty = default(int?), int? total = default(int?), IList<LivyBatchResponse> sessions = default(IList<LivyBatchResponse>))
+        public SparkSessionCollection(int? fromProperty = default(int?), int? total = default(int?), IList<SparkSessionJob> sessions = default(IList<SparkSessionJob>))
         {
             FromProperty = fromProperty;
             Total = total;
@@ -54,7 +54,7 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "sessions")]
-        public IList<LivyBatchResponse> Sessions { get; set; }
+        public IList<SparkSessionJob> Sessions { get; set; }
 
     }
 }

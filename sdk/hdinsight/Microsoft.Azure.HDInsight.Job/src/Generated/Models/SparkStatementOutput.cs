@@ -13,24 +13,24 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class LivyStatementCancellationResponse
+    public partial class SparkStatementOutput
     {
         /// <summary>
-        /// Initializes a new instance of the LivyStatementCancellationResponse
-        /// class.
+        /// Initializes a new instance of the SparkStatementOutput class.
         /// </summary>
-        public LivyStatementCancellationResponse()
+        public SparkStatementOutput()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyStatementCancellationResponse
-        /// class.
+        /// Initializes a new instance of the SparkStatementOutput class.
         /// </summary>
-        public LivyStatementCancellationResponse(string msg = default(string))
+        public SparkStatementOutput(string status = default(string), int? executionCount = default(int?), object data = default(object))
         {
-            Msg = msg;
+            Status = status;
+            ExecutionCount = executionCount;
+            Data = data;
             CustomInit();
         }
 
@@ -41,8 +41,18 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "msg")]
-        public string Msg { get; set; }
+        [JsonProperty(PropertyName = "status")]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "execution_count")]
+        public int? ExecutionCount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "data")]
+        public object Data { get; set; }
 
     }
 }

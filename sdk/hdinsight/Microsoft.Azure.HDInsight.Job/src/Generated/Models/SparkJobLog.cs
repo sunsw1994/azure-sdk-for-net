@@ -11,25 +11,29 @@
 namespace Microsoft.Azure.HDInsight.Job.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyStateResponse
+    public partial class SparkJobLog
     {
         /// <summary>
-        /// Initializes a new instance of the LivyStateResponse class.
+        /// Initializes a new instance of the SparkJobLog class.
         /// </summary>
-        public LivyStateResponse()
+        public SparkJobLog()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyStateResponse class.
+        /// Initializes a new instance of the SparkJobLog class.
         /// </summary>
-        public LivyStateResponse(int? id = default(int?), string state = default(string))
+        public SparkJobLog(int? id = default(int?), int? fromProperty = default(int?), int? size = default(int?), IList<string> logLines = default(IList<string>))
         {
             Id = id;
-            State = state;
+            FromProperty = fromProperty;
+            Size = size;
+            LogLines = logLines;
             CustomInit();
         }
 
@@ -45,8 +49,18 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "state")]
-        public string State { get; set; }
+        [JsonProperty(PropertyName = "from")]
+        public int? FromProperty { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "size")]
+        public int? Size { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "log")]
+        public IList<string> LogLines { get; set; }
 
     }
 }

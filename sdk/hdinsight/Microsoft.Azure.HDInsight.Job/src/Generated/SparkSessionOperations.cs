@@ -81,7 +81,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyListSessionResponse>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSessionCollection>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -205,7 +205,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyListSessionResponse>();
+            var _result = new AzureOperationResponse<SparkSessionCollection>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -218,7 +218,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyListSessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSessionCollection>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -240,10 +240,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <summary>
         /// Create new spark session.
         /// </summary>
-        /// <param name='livyRequest'>
+        /// <param name='sparkSessionRequest'>
         /// Livy compatible session job request payload.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -266,15 +267,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(LivySessionRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSessionJob>> CreateWithHttpMessagesAsync(SparkSessionJobRequest sparkSessionRequest, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
             }
-            if (livyRequest == null)
+            if (sparkSessionRequest == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "livyRequest");
+                throw new ValidationException(ValidationRules.CannotBeNull, "sparkSessionRequest");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -283,8 +284,8 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("xRequestedBy", xRequestedBy);
-                tracingParameters.Add("livyRequest", livyRequest);
+                tracingParameters.Add("requestedBy", requestedBy);
+                tracingParameters.Add("sparkSessionRequest", sparkSessionRequest);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Create", tracingParameters);
             }
@@ -307,13 +308,13 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
             }
-            if (xRequestedBy != null)
+            if (requestedBy != null)
             {
                 if (_httpRequest.Headers.Contains("X-Requested-By"))
                 {
                     _httpRequest.Headers.Remove("X-Requested-By");
                 }
-                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", requestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -339,9 +340,9 @@ namespace Microsoft.Azure.HDInsight.Job
 
             // Serialize Request
             string _requestContent = null;
-            if(livyRequest != null)
+            if(sparkSessionRequest != null)
             {
-                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(livyRequest, Client.SerializationSettings);
+                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(sparkSessionRequest, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -400,7 +401,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivySessionResponse>();
+            var _result = new AzureOperationResponse<SparkSessionJob>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -413,7 +414,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivySessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSessionJob>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -459,7 +460,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivySessionResponse>> GetWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSessionJob>> GetWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -575,7 +576,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivySessionResponse>();
+            var _result = new AzureOperationResponse<SparkSessionJob>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -588,7 +589,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivySessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSessionJob>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -613,7 +614,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -633,7 +635,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -646,7 +648,7 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("xRequestedBy", xRequestedBy);
+                tracingParameters.Add("requestedBy", requestedBy);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
@@ -671,13 +673,13 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
             }
-            if (xRequestedBy != null)
+            if (requestedBy != null)
             {
                 if (_httpRequest.Headers.Contains("X-Requested-By"))
                 {
                     _httpRequest.Headers.Remove("X-Requested-By");
                 }
-                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", requestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -773,7 +775,7 @@ namespace Microsoft.Azure.HDInsight.Job
         }
 
         /// <summary>
-        /// Gets a single spark batch job logs.
+        /// Gets a single spark session job logs.
         /// </summary>
         /// <param name='sessionId'>
         /// Identifier for the session job.
@@ -806,7 +808,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyLogResponse>> GetLogsWithHttpMessagesAsync(int sessionId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkJobLog>> GetLogsWithHttpMessagesAsync(int sessionId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -932,7 +934,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyLogResponse>();
+            var _result = new AzureOperationResponse<SparkJobLog>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -945,7 +947,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyLogResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkJobLog>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -991,7 +993,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStateResponse>> GetStateWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkJobState>> GetStateWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -1107,7 +1109,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStateResponse>();
+            var _result = new AzureOperationResponse<SparkJobState>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1120,7 +1122,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStateResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkJobState>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1166,7 +1168,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyListStatementsResponse>> ListStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatementCollection>> ListStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -1282,7 +1284,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyListStatementsResponse>();
+            var _result = new AzureOperationResponse<SparkStatementCollection>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1295,7 +1297,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyListStatementsResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatementCollection>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1320,10 +1322,11 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkStatementRequest'>
         /// Livy compatible batch job request payload.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1346,15 +1349,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(int sessionId, LivyStatementRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatement>> CreateStatementWithHttpMessagesAsync(int sessionId, SparkStatementRequest sparkStatementRequest, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.ClusterDnsName");
             }
-            if (livyRequest == null)
+            if (sparkStatementRequest == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "livyRequest");
+                throw new ValidationException(ValidationRules.CannotBeNull, "sparkStatementRequest");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1363,11 +1366,11 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("xRequestedBy", xRequestedBy);
+                tracingParameters.Add("requestedBy", requestedBy);
                 tracingParameters.Add("sessionId", sessionId);
-                tracingParameters.Add("livyRequest", livyRequest);
+                tracingParameters.Add("sparkStatementRequest", sparkStatementRequest);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "CreateStatements", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CreateStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
@@ -1389,13 +1392,13 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
             }
-            if (xRequestedBy != null)
+            if (requestedBy != null)
             {
                 if (_httpRequest.Headers.Contains("X-Requested-By"))
                 {
                     _httpRequest.Headers.Remove("X-Requested-By");
                 }
-                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", requestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -1421,9 +1424,9 @@ namespace Microsoft.Azure.HDInsight.Job
 
             // Serialize Request
             string _requestContent = null;
-            if(livyRequest != null)
+            if(sparkStatementRequest != null)
             {
-                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(livyRequest, Client.SerializationSettings);
+                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(sparkStatementRequest, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -1482,7 +1485,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementResponse>();
+            var _result = new AzureOperationResponse<SparkStatement>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1495,7 +1498,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatement>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1544,7 +1547,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponse>> GetStatementsWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatement>> GetStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -1560,7 +1563,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("statementId", statementId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetStatements", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
@@ -1662,7 +1665,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementResponse>();
+            var _result = new AzureOperationResponse<SparkStatement>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1675,7 +1678,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatement>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1703,7 +1706,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <param name='statementId'>
         /// Identifier for the statement.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1726,7 +1730,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(int sessionId, int statementId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatementCancellationResult>> DeleteStatementWithHttpMessagesAsync(int sessionId, int statementId, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (Client.ClusterDnsName == null)
             {
@@ -1739,11 +1743,11 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("xRequestedBy", xRequestedBy);
+                tracingParameters.Add("requestedBy", requestedBy);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("statementId", statementId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "DeleteStatements", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "DeleteStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
@@ -1766,13 +1770,13 @@ namespace Microsoft.Azure.HDInsight.Job
             {
                 _httpRequest.Headers.TryAddWithoutValidation("x-ms-client-request-id", System.Guid.NewGuid().ToString());
             }
-            if (xRequestedBy != null)
+            if (requestedBy != null)
             {
                 if (_httpRequest.Headers.Contains("X-Requested-By"))
                 {
                     _httpRequest.Headers.Remove("X-Requested-By");
                 }
-                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", xRequestedBy);
+                _httpRequest.Headers.TryAddWithoutValidation("X-Requested-By", requestedBy);
             }
             if (Client.AcceptLanguage != null)
             {
@@ -1853,7 +1857,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementCancellationResponse>();
+            var _result = new AzureOperationResponse<SparkStatementCancellationResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1866,7 +1870,7 @@ namespace Microsoft.Azure.HDInsight.Job
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementCancellationResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatementCancellationResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

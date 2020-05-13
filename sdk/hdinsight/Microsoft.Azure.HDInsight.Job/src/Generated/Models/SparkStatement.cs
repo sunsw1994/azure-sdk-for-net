@@ -11,30 +11,27 @@
 namespace Microsoft.Azure.HDInsight.Job.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyBatchResponse
+    public partial class SparkStatement
     {
         /// <summary>
-        /// Initializes a new instance of the LivyBatchResponse class.
+        /// Initializes a new instance of the SparkStatement class.
         /// </summary>
-        public LivyBatchResponse()
+        public SparkStatement()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyBatchResponse class.
+        /// Initializes a new instance of the SparkStatement class.
         /// </summary>
-        public LivyBatchResponse(int? id = default(int?), string appId = default(string), IDictionary<string, string> appInfo = default(IDictionary<string, string>), string state = default(string), IList<string> log = default(IList<string>))
+        public SparkStatement(int? id = default(int?), string code = default(string), string state = default(string), SparkStatementOutput output = default(SparkStatementOutput))
         {
             Id = id;
-            AppId = appId;
-            AppInfo = appInfo;
+            Code = code;
             State = state;
-            Log = log;
+            Output = output;
             CustomInit();
         }
 
@@ -50,13 +47,8 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "appId")]
-        public string AppId { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "appInfo")]
-        public IDictionary<string, string> AppInfo { get; set; }
+        [JsonProperty(PropertyName = "code")]
+        public string Code { get; set; }
 
         /// <summary>
         /// </summary>
@@ -65,8 +57,8 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "log")]
-        public IList<string> Log { get; set; }
+        [JsonProperty(PropertyName = "output")]
+        public SparkStatementOutput Output { get; set; }
 
     }
 }

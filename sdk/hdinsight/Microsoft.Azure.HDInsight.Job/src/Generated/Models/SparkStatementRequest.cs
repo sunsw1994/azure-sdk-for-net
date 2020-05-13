@@ -13,20 +13,20 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class LivyStatementRequest
+    public partial class SparkStatementRequest
     {
         /// <summary>
-        /// Initializes a new instance of the LivyStatementRequest class.
+        /// Initializes a new instance of the SparkStatementRequest class.
         /// </summary>
-        public LivyStatementRequest()
+        public SparkStatementRequest()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyStatementRequest class.
+        /// Initializes a new instance of the SparkStatementRequest class.
         /// </summary>
-        public LivyStatementRequest(string code = default(string), string kind = default(string))
+        public SparkStatementRequest(string code = default(string), string kind = default(string))
         {
             Code = code;
             Kind = kind;

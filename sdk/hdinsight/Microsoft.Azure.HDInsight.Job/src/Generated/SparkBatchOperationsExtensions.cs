@@ -34,7 +34,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// Optional param specifying the size of the returned list.
             /// By default it is 20 and that is the maximum.
             /// </param>
-            public static LivyListBatchResponse List(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?))
+            public static SparkBatchJobCollection List(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?))
             {
                 return operations.ListAsync(fromParameter, size).GetAwaiter().GetResult();
             }
@@ -55,7 +55,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyListBatchResponse> ListAsync(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJobCollection> ListAsync(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ListWithHttpMessagesAsync(fromParameter, size, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -69,14 +69,15 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkBatchJobRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
-            /// <param name='xRequestedBy'>
+            /// <param name='requestedBy'>
+            /// Add default vaule for X-Requested-By in header.
             /// </param>
-            public static LivyBatchResponse Create(this ISparkBatchOperations operations, LivyBatchRequest livyRequest, string xRequestedBy = default(string))
+            public static SparkBatchJob Create(this ISparkBatchOperations operations, SparkBatchJobRequest sparkBatchJobRequest, string requestedBy = "admin")
             {
-                return operations.CreateAsync(livyRequest, xRequestedBy).GetAwaiter().GetResult();
+                return operations.CreateAsync(sparkBatchJobRequest, requestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -85,17 +86,18 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkBatchJobRequest'>
             /// Livy compatible batch job request payload.
             /// </param>
-            /// <param name='xRequestedBy'>
+            /// <param name='requestedBy'>
+            /// Add default vaule for X-Requested-By in header.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyBatchResponse> CreateAsync(this ISparkBatchOperations operations, LivyBatchRequest livyRequest, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJob> CreateAsync(this ISparkBatchOperations operations, SparkBatchJobRequest sparkBatchJobRequest, string requestedBy = "admin", CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(livyRequest, xRequestedBy, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateWithHttpMessagesAsync(sparkBatchJobRequest, requestedBy, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -110,7 +112,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            public static LivyBatchResponse Get(this ISparkBatchOperations operations, int batchId)
+            public static SparkBatchJob Get(this ISparkBatchOperations operations, int batchId)
             {
                 return operations.GetAsync(batchId).GetAwaiter().GetResult();
             }
@@ -127,7 +129,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyBatchResponse> GetAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJob> GetAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetWithHttpMessagesAsync(batchId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -144,11 +146,12 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            /// <param name='xRequestedBy'>
+            /// <param name='requestedBy'>
+            /// Add default vaule for X-Requested-By in header.
             /// </param>
-            public static void Delete(this ISparkBatchOperations operations, int batchId, string xRequestedBy = default(string))
+            public static void Delete(this ISparkBatchOperations operations, int batchId, string requestedBy = "admin")
             {
-                operations.DeleteAsync(batchId, xRequestedBy).GetAwaiter().GetResult();
+                operations.DeleteAsync(batchId, requestedBy).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -160,14 +163,15 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            /// <param name='xRequestedBy'>
+            /// <param name='requestedBy'>
+            /// Add default vaule for X-Requested-By in header.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteAsync(this ISparkBatchOperations operations, int batchId, string xRequestedBy = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteAsync(this ISparkBatchOperations operations, int batchId, string requestedBy = "admin", CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.DeleteWithHttpMessagesAsync(batchId, xRequestedBy, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.DeleteWithHttpMessagesAsync(batchId, requestedBy, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -186,7 +190,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// Optional param specifying the size of the returned list.
             /// By default it is 20 and that is the maximum.
             /// </param>
-            public static LivyLogResponse GetLogs(this ISparkBatchOperations operations, int batchId, int? fromParameter = default(int?), int? size = default(int?))
+            public static SparkJobLog GetLogs(this ISparkBatchOperations operations, int batchId, int? fromParameter = default(int?), int? size = default(int?))
             {
                 return operations.GetLogsAsync(batchId, fromParameter, size).GetAwaiter().GetResult();
             }
@@ -210,7 +214,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyLogResponse> GetLogsAsync(this ISparkBatchOperations operations, int batchId, int? fromParameter = default(int?), int? size = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkJobLog> GetLogsAsync(this ISparkBatchOperations operations, int batchId, int? fromParameter = default(int?), int? size = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetLogsWithHttpMessagesAsync(batchId, fromParameter, size, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -227,7 +231,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            public static LivyStateResponse GetState(this ISparkBatchOperations operations, int batchId)
+            public static SparkJobState GetState(this ISparkBatchOperations operations, int batchId)
             {
                 return operations.GetStateAsync(batchId).GetAwaiter().GetResult();
             }
@@ -244,7 +248,7 @@ namespace Microsoft.Azure.HDInsight.Job
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStateResponse> GetStateAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkJobState> GetStateAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetStateWithHttpMessagesAsync(batchId, null, cancellationToken).ConfigureAwait(false))
                 {

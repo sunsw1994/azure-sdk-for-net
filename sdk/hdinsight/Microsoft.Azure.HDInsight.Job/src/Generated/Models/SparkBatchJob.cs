@@ -15,25 +15,26 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyLogResponse
+    public partial class SparkBatchJob
     {
         /// <summary>
-        /// Initializes a new instance of the LivyLogResponse class.
+        /// Initializes a new instance of the SparkBatchJob class.
         /// </summary>
-        public LivyLogResponse()
+        public SparkBatchJob()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyLogResponse class.
+        /// Initializes a new instance of the SparkBatchJob class.
         /// </summary>
-        public LivyLogResponse(int? id = default(int?), int? fromProperty = default(int?), int? size = default(int?), IList<string> log = default(IList<string>))
+        public SparkBatchJob(int? id = default(int?), string appId = default(string), IDictionary<string, string> appInfo = default(IDictionary<string, string>), string state = default(string), IList<string> logLines = default(IList<string>))
         {
             Id = id;
-            FromProperty = fromProperty;
-            Size = size;
-            Log = log;
+            AppId = appId;
+            AppInfo = appInfo;
+            State = state;
+            LogLines = logLines;
             CustomInit();
         }
 
@@ -49,18 +50,23 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "from")]
-        public int? FromProperty { get; set; }
+        [JsonProperty(PropertyName = "appId")]
+        public string AppId { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "size")]
-        public int? Size { get; set; }
+        [JsonProperty(PropertyName = "appInfo")]
+        public IDictionary<string, string> AppInfo { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "log")]
-        public IList<string> Log { get; set; }
+        public IList<string> LogLines { get; set; }
 
     }
 }

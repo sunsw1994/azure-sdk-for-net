@@ -48,14 +48,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyListBatchResponse>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJobCollection>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create new spark batch job.
         /// </summary>
-        /// <param name='livyRequest'>
+        /// <param name='sparkBatchJobRequest'>
         /// Livy compatible batch job request payload.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -72,7 +73,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyBatchResponse>> CreateWithHttpMessagesAsync(LivyBatchRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJob>> CreateWithHttpMessagesAsync(SparkBatchJobRequest sparkBatchJobRequest, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch job.
         /// </summary>
@@ -94,14 +95,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyBatchResponse>> GetWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJob>> GetWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Cancels a running spark batch job.
         /// </summary>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -115,7 +117,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int batchId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int batchId, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch job logs.
         /// </summary>
@@ -144,7 +146,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyLogResponse>> GetLogsWithHttpMessagesAsync(int batchId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkJobLog>> GetLogsWithHttpMessagesAsync(int batchId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch state.
         /// </summary>
@@ -166,6 +168,6 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStateResponse>> GetStateWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkJobState>> GetStateWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

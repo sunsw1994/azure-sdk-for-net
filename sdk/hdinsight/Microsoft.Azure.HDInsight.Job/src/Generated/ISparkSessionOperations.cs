@@ -48,14 +48,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyListSessionResponse>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSessionCollection>> ListWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create new spark session.
         /// </summary>
-        /// <param name='livyRequest'>
+        /// <param name='sparkSessionRequest'>
         /// Livy compatible session job request payload.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -72,7 +73,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivySessionResponse>> CreateWithHttpMessagesAsync(LivySessionRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSessionJob>> CreateWithHttpMessagesAsync(SparkSessionJobRequest sparkSessionRequest, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark session.
         /// </summary>
@@ -94,14 +95,15 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivySessionResponse>> GetWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSessionJob>> GetWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Cancels a running spark session.
         /// </summary>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -115,9 +117,9 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(int sessionId, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Gets a single spark batch job logs.
+        /// Gets a single spark session job logs.
         /// </summary>
         /// <param name='sessionId'>
         /// Identifier for the session job.
@@ -144,7 +146,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyLogResponse>> GetLogsWithHttpMessagesAsync(int sessionId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkJobLog>> GetLogsWithHttpMessagesAsync(int sessionId, int? fromParameter = default(int?), int? size = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark session job state.
         /// </summary>
@@ -166,7 +168,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStateResponse>> GetStateWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkJobState>> GetStateWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a list of statements within a spark session.
         /// </summary>
@@ -188,17 +190,18 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyListStatementsResponse>> ListStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatementCollection>> ListStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create statement within a spark session.
         /// </summary>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkStatementRequest'>
         /// Livy compatible batch job request payload.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -215,7 +218,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementResponse>> CreateStatementsWithHttpMessagesAsync(int sessionId, LivyStatementRequest livyRequest, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatement>> CreateStatementWithHttpMessagesAsync(int sessionId, SparkStatementRequest sparkStatementRequest, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single statement within a spark session.
         /// </summary>
@@ -240,7 +243,7 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementResponse>> GetStatementsWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatement>> GetStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Kill a statement within a session.
         /// </summary>
@@ -250,7 +253,8 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <param name='statementId'>
         /// Identifier for the statement.
         /// </param>
-        /// <param name='xRequestedBy'>
+        /// <param name='requestedBy'>
+        /// Add default vaule for X-Requested-By in header.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -267,6 +271,6 @@ namespace Microsoft.Azure.HDInsight.Job
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementsWithHttpMessagesAsync(int sessionId, int statementId, string xRequestedBy = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatementCancellationResult>> DeleteStatementWithHttpMessagesAsync(int sessionId, int statementId, string requestedBy = "admin", Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

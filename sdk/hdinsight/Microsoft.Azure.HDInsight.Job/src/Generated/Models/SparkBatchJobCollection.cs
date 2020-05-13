@@ -11,27 +11,28 @@
 namespace Microsoft.Azure.HDInsight.Job.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyStatementResponse
+    public partial class SparkBatchJobCollection
     {
         /// <summary>
-        /// Initializes a new instance of the LivyStatementResponse class.
+        /// Initializes a new instance of the SparkBatchJobCollection class.
         /// </summary>
-        public LivyStatementResponse()
+        public SparkBatchJobCollection()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyStatementResponse class.
+        /// Initializes a new instance of the SparkBatchJobCollection class.
         /// </summary>
-        public LivyStatementResponse(int? id = default(int?), string code = default(string), string state = default(string), LivyStatementOutput output = default(LivyStatementOutput))
+        public SparkBatchJobCollection(int? fromProperty = default(int?), int? total = default(int?), IList<SparkBatchJob> sessions = default(IList<SparkBatchJob>))
         {
-            Id = id;
-            Code = code;
-            State = state;
-            Output = output;
+            FromProperty = fromProperty;
+            Total = total;
+            Sessions = sessions;
             CustomInit();
         }
 
@@ -42,23 +43,18 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public int? Id { get; set; }
+        [JsonProperty(PropertyName = "from")]
+        public int? FromProperty { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "code")]
-        public string Code { get; set; }
+        [JsonProperty(PropertyName = "total")]
+        public int? Total { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "state")]
-        public string State { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "output")]
-        public LivyStatementOutput Output { get; set; }
+        [JsonProperty(PropertyName = "sessions")]
+        public IList<SparkBatchJob> Sessions { get; set; }
 
     }
 }

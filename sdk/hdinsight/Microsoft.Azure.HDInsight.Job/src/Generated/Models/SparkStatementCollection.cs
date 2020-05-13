@@ -15,24 +15,22 @@ namespace Microsoft.Azure.HDInsight.Job.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyListSessionResponse
+    public partial class SparkStatementCollection
     {
         /// <summary>
-        /// Initializes a new instance of the LivyListSessionResponse class.
+        /// Initializes a new instance of the SparkStatementCollection class.
         /// </summary>
-        public LivyListSessionResponse()
+        public SparkStatementCollection()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyListSessionResponse class.
+        /// Initializes a new instance of the SparkStatementCollection class.
         /// </summary>
-        public LivyListSessionResponse(int? fromProperty = default(int?), int? total = default(int?), IList<LivySessionResponse> sessions = default(IList<LivySessionResponse>))
+        public SparkStatementCollection(IList<SparkStatement> statements = default(IList<SparkStatement>))
         {
-            FromProperty = fromProperty;
-            Total = total;
-            Sessions = sessions;
+            Statements = statements;
             CustomInit();
         }
 
@@ -43,18 +41,8 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "from")]
-        public int? FromProperty { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "total")]
-        public int? Total { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "sessions")]
-        public IList<LivySessionResponse> Sessions { get; set; }
+        [JsonProperty(PropertyName = "statements")]
+        public IList<SparkStatement> Statements { get; set; }
 
     }
 }

@@ -44,11 +44,11 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 var originalResponse = client.SparkBatch.List();
                 Assert.NotNull(originalResponse);
 
-                LivyBatchRequest createRequest = new LivyBatchRequest
+                SparkBatchJobRequest createRequest = new SparkBatchJobRequest
                 {
                     File = "wasbs:///example/jars/spark-examples.jar",
                     ClassName = "org.apache.spark.examples.SparkPi",
-                    Args = new List<string>(){"10"}
+                    Arguments = new List<string>(){"10"}
                 };
                 var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
@@ -71,11 +71,11 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var context = MockContext.Start(this.GetType()))
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
-                LivyBatchRequest createRequest = new LivyBatchRequest
+                SparkBatchJobRequest createRequest = new SparkBatchJobRequest
                 {
                     File = "wasbs:///example/jars/spark-examples.jar",
                     ClassName = "org.apache.spark.examples.SparkPi",
-                    Args = new List<string>() { "10" }
+                    Arguments = new List<string>() { "10" }
                 };
                 var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
@@ -92,11 +92,11 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var context = MockContext.Start(this.GetType()))
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
-                LivyBatchRequest createRequest = new LivyBatchRequest
+                SparkBatchJobRequest createRequest = new SparkBatchJobRequest
                 {
                     File = "wasbs:///example/jars/spark-examples.jar",
                     ClassName = "org.apache.spark.examples.SparkPi",
-                    Args = new List<string>() { "10" }
+                    Arguments = new List<string>() { "10" }
                 };
                 var createResponse = client.SparkBatch.Create(createRequest);
                 Assert.NotNull(createResponse);
@@ -122,7 +122,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 var originalResponse = client.SparkSession.List();
                 Assert.NotNull(originalResponse);
 
-                LivySessionRequest createRequest = new LivySessionRequest
+                SparkSessionJobRequest createRequest = new SparkSessionJobRequest
                 {
                     Kind = "spark"
                 };
@@ -151,7 +151,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var context = MockContext.Start(this.GetType()))
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
-                LivySessionRequest createRequest = new LivySessionRequest
+                SparkSessionJobRequest createRequest = new SparkSessionJobRequest
                 {
                     Kind = "spark"
                 };
@@ -174,7 +174,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
                 //create session
-                LivySessionRequest createRequest = new LivySessionRequest
+                SparkSessionJobRequest createRequest = new SparkSessionJobRequest
                 {
                     Kind = "spark"
                 };
@@ -201,7 +201,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
             using (var client = this.CommonData.GetHDInsightLivyJobManagementClient(context))
             {
                 //create session
-                LivySessionRequest createRequest = new LivySessionRequest
+                SparkSessionJobRequest createRequest = new SparkSessionJobRequest
                 {
                     Kind = "spark"
                 };
@@ -213,14 +213,14 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
 
                 var originalResponse = client.SparkSession.ListStatements((int)createResponse.Id);
                 Assert.NotNull(originalResponse);
-                
+
                 //create statements
-                LivyStatementRequest statementRequest = new LivyStatementRequest
+                SparkStatementRequest statementRequest = new SparkStatementRequest
                 {
                     Code = "1+1"
                 };
 
-                var statementResponse = client.SparkSession.CreateStatements((int)createResponse.Id, statementRequest);
+                var statementResponse = client.SparkSession.CreateStatement((int)createResponse.Id, statementRequest);
                 Assert.NotNull(statementResponse);
                 Assert.Equal("waiting", statementResponse.State);
 
@@ -230,8 +230,8 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
                 TestUtilities.Wait(10000);
 
                 //delete statements
-                var cancelResponse = client.SparkSession.DeleteStatements((int)createResponse.Id, (int)statementResponse.Id);
-                Assert.Equal("canceled", cancelResponse.Msg);
+                var cancelResponse = client.SparkSession.DeleteStatement((int)createResponse.Id, (int)statementResponse.Id);
+                Assert.Equal("canceled", cancelResponse.CancelMessage);
                 
                 //delete session
                 client.SparkSession.Delete((int)createResponse.Id);

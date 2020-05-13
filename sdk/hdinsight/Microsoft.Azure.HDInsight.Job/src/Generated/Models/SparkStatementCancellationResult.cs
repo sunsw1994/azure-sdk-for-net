@@ -11,26 +11,26 @@
 namespace Microsoft.Azure.HDInsight.Job.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class LivyListStatementsResponse
+    public partial class SparkStatementCancellationResult
     {
         /// <summary>
-        /// Initializes a new instance of the LivyListStatementsResponse class.
+        /// Initializes a new instance of the SparkStatementCancellationResult
+        /// class.
         /// </summary>
-        public LivyListStatementsResponse()
+        public SparkStatementCancellationResult()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the LivyListStatementsResponse class.
+        /// Initializes a new instance of the SparkStatementCancellationResult
+        /// class.
         /// </summary>
-        public LivyListStatementsResponse(IList<LivyStatementResponse> statements = default(IList<LivyStatementResponse>))
+        public SparkStatementCancellationResult(string cancelMessage = default(string))
         {
-            Statements = statements;
+            CancelMessage = cancelMessage;
             CustomInit();
         }
 
@@ -41,8 +41,8 @@ namespace Microsoft.Azure.HDInsight.Job.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "statements")]
-        public IList<LivyStatementResponse> Statements { get; set; }
+        [JsonProperty(PropertyName = "msg")]
+        public string CancelMessage { get; set; }
 
     }
 }
