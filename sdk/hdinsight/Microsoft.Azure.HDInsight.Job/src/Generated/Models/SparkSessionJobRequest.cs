@@ -28,7 +28,9 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// Initializes a new instance of the SparkSessionJobRequest class.
         /// </summary>
-        public SparkSessionJobRequest(object kind = default(object), string proxyUser = default(string), IList<string> jars = default(IList<string>), IList<string> pythonFiles = default(IList<string>), IList<string> files = default(IList<string>), string driverMemory = default(string), int? driverCores = default(int?), string executorMemory = default(string), int? executorCores = default(int?), int? executorCount = default(int?), IList<string> archives = default(IList<string>), string queue = default(string), string name = default(string), IDictionary<string, string> configuration = default(IDictionary<string, string>), int? heartbeatTimeoutInSecond = default(int?))
+        /// <param name="kind">Possible values include: 'spark', 'pyspark',
+        /// 'sparkr', 'sql'</param>
+        public SparkSessionJobRequest(string kind = default(string), string proxyUser = default(string), IList<string> jars = default(IList<string>), IList<string> pythonFiles = default(IList<string>), IList<string> files = default(IList<string>), string driverMemory = default(string), int? driverCores = default(int?), string executorMemory = default(string), int? executorCores = default(int?), int? executorCount = default(int?), IList<string> archives = default(IList<string>), string queue = default(string), string name = default(string), IDictionary<string, string> configuration = default(IDictionary<string, string>), int? heartbeatTimeoutInSecond = default(int?))
         {
             Kind = kind;
             ProxyUser = proxyUser;
@@ -54,9 +56,11 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         partial void CustomInit();
 
         /// <summary>
+        /// Gets or sets possible values include: 'spark', 'pyspark', 'sparkr',
+        /// 'sql'
         /// </summary>
         [JsonProperty(PropertyName = "kind")]
-        public object Kind { get; set; }
+        public string Kind { get; set; }
 
         /// <summary>
         /// </summary>

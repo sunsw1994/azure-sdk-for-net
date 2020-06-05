@@ -26,12 +26,13 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// Initializes a new instance of the SparkStatement class.
         /// </summary>
-        public SparkStatement(int? id = default(int?), string code = default(string), string state = default(string), SparkStatementOutput output = default(SparkStatementOutput))
+        public SparkStatement(int? id = default(int?), string code = default(string), string state = default(string), SparkStatementOutput output = default(SparkStatementOutput), double? progress = default(double?))
         {
             Id = id;
             Code = code;
             State = state;
             Output = output;
+            Progress = progress;
             CustomInit();
         }
 
@@ -59,6 +60,11 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// </summary>
         [JsonProperty(PropertyName = "output")]
         public SparkStatementOutput Output { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "progress")]
+        public double? Progress { get; set; }
 
     }
 }

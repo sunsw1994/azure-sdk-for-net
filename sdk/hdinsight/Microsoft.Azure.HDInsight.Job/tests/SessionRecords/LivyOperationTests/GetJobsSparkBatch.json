@@ -19,7 +19,7 @@
           "FxVersion/4.6.28801.04",
           "OSName/Windows",
           "OSVersion/Microsoft.Windows.10.0.18363.",
-          "Microsoft.Azure.HDInsight.Job.HDInsightJobManagementClient/3.0.0.0"
+          "Microsoft.Azure.HDInsight.Job.HDInsightJobClient/3.0.0.0"
         ],
         "Content-Type": [
           "application/json; charset=utf-8"
@@ -73,7 +73,7 @@
           "FxVersion/4.6.28801.04",
           "OSName/Windows",
           "OSVersion/Microsoft.Windows.10.0.18363.",
-          "Microsoft.Azure.HDInsight.Job.HDInsightJobManagementClient/3.0.0.0"
+          "Microsoft.Azure.HDInsight.Job.HDInsightJobClient/3.0.0.0"
         ]
       },
       "ResponseHeaders": {

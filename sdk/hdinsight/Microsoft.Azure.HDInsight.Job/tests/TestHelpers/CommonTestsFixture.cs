@@ -165,7 +165,7 @@ namespace Microsoft.Azure.HDInsight.Job.Tests
         public CommonTestsFixture()
         {
             var context = MockContext.Start(this.GetType(), ".ctor");
-            //this.Initialize(context);
+            this.Initialize(context);
         }
 
         /// <summary>

@@ -28,11 +28,12 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// <summary>
         /// Initializes a new instance of the SparkJobLog class.
         /// </summary>
-        public SparkJobLog(int? id = default(int?), int? fromProperty = default(int?), int? size = default(int?), IList<string> logLines = default(IList<string>))
+        public SparkJobLog(int? id = default(int?), int? fromProperty = default(int?), int? size = default(int?), long? total = default(long?), IList<string> logLines = default(IList<string>))
         {
             Id = id;
             FromProperty = fromProperty;
             Size = size;
+            Total = total;
             LogLines = logLines;
             CustomInit();
         }
@@ -56,6 +57,11 @@ namespace Microsoft.Azure.HDInsight.Job.Models
         /// </summary>
         [JsonProperty(PropertyName = "size")]
         public int? Size { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "total")]
+        public long? Total { get; set; }
 
         /// <summary>
         /// </summary>
