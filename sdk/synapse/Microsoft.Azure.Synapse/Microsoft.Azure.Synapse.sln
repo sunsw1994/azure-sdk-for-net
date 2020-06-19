@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1022
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.Synapse", "src\Microsoft.Azure.Synapse.csproj", "{9BB62C96-1BDC-4D50-9FA6-A899B5184454}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.Synapse.Tests", "tests\Microsoft.Azure.Synapse.Tests.csproj", "{7C62EFAF-6D97-48C6-91CE-6958D5050A22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9BB62C96-1BDC-4D50-9FA6-A899B5184454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BB62C96-1BDC-4D50-9FA6-A899B5184454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BB62C96-1BDC-4D50-9FA6-A899B5184454}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C62EFAF-6D97-48C6-91CE-6958D5050A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C62EFAF-6D97-48C6-91CE-6958D5050A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C62EFAF-6D97-48C6-91CE-6958D5050A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C62EFAF-6D97-48C6-91CE-6958D5050A22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

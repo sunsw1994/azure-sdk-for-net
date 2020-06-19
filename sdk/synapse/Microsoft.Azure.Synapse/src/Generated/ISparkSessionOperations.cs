@@ -27,12 +27,6 @@ namespace Microsoft.Azure.Synapse
         /// List all spark sessions which are running under a particular spark
         /// pool.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='fromParameter'>
         /// Optional param specifying which index the list should begin from.
         /// </param>
@@ -59,17 +53,11 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivyListSessionResponse>> ListWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSessionCollection>> GetSparkSessionsWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create new spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkSessionOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='detailed'>
@@ -91,16 +79,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivySessionResponse>> CreateWithHttpMessagesAsync(string workspaceName, string sparkPoolName, ExtendedLivySessionRequest livyRequest, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSession>> CreateSparkSessionWithHttpMessagesAsync(SparkSessionOptions sparkSessionOptions, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -123,17 +105,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivySessionResponse>> GetWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkSession>> GetSparkSessionWithHttpMessagesAsync(int sessionId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Cancels a running spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand"
-        /// targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -149,18 +124,11 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> CancelSparkSessionWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Sends a keep alive call to the current session to reset the session
         /// timeout.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand"
-        /// targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -176,16 +144,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> ResetTimeoutWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> ResetSparkSessionTimeoutWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a list of statements within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -204,20 +166,14 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementsResponseBody>> ListStatementsWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatementCollection>> GetSparkStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create statement within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkStatementOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='customHeaders'>
@@ -235,16 +191,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementResponseBody>> CreateStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, LivyStatementRequestBody livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatement>> CreateSparkStatementWithHttpMessagesAsync(int sessionId, SparkStatementOptions sparkStatementOptions, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single statement within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -266,16 +216,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementResponseBody>> GetStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatement>> GetSparkStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Kill a statement within a session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -297,6 +241,6 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkStatementCancellationResult>> CancelSparkStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

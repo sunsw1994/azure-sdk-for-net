@@ -27,12 +27,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='fromParameter'>
             /// Optional param specifying which index the list should begin from.
             /// </param>
@@ -44,9 +38,9 @@ namespace Microsoft.Azure.Synapse
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivyListBatchResponse List(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?))
+            public static SparkBatchJobCollection GetSparkBatchJobs(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?))
             {
-                return operations.ListAsync(workspaceName, sparkPoolName, fromParameter, size, detailed).GetAwaiter().GetResult();
+                return operations.GetSparkBatchJobsAsync(fromParameter, size, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -55,12 +49,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='fromParameter'>
             /// Optional param specifying which index the list should begin from.
             /// </param>
@@ -75,9 +63,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivyListBatchResponse> ListAsync(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJobCollection> GetSparkBatchJobsAsync(this ISparkBatchOperations operations, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ListWithHttpMessagesAsync(workspaceName, sparkPoolName, fromParameter, size, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkBatchJobsWithHttpMessagesAsync(fromParameter, size, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -89,22 +77,16 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkBatchJobOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='detailed'>
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivyBatchResponse Create(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, ExtendedLivyBatchRequest livyRequest, bool? detailed = default(bool?))
+            public static SparkBatchJob CreateSparkBatchJob(this ISparkBatchOperations operations, SparkBatchJobOptions sparkBatchJobOptions, bool? detailed = default(bool?))
             {
-                return operations.CreateAsync(workspaceName, sparkPoolName, livyRequest, detailed).GetAwaiter().GetResult();
+                return operations.CreateSparkBatchJobAsync(sparkBatchJobOptions, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -113,13 +95,7 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkBatchJobOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='detailed'>
@@ -129,9 +105,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivyBatchResponse> CreateAsync(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, ExtendedLivyBatchRequest livyRequest, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJob> CreateSparkBatchJobAsync(this ISparkBatchOperations operations, SparkBatchJobOptions sparkBatchJobOptions, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(workspaceName, sparkPoolName, livyRequest, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateSparkBatchJobWithHttpMessagesAsync(sparkBatchJobOptions, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -143,12 +119,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
@@ -156,9 +126,9 @@ namespace Microsoft.Azure.Synapse
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivyBatchResponse Get(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int batchId, bool? detailed = default(bool?))
+            public static SparkBatchJob GetSparkBatchJob(this ISparkBatchOperations operations, int batchId, bool? detailed = default(bool?))
             {
-                return operations.GetAsync(workspaceName, sparkPoolName, batchId, detailed).GetAwaiter().GetResult();
+                return operations.GetSparkBatchJobAsync(batchId, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -166,12 +136,6 @@ namespace Microsoft.Azure.Synapse
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
             /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
@@ -183,9 +147,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivyBatchResponse> GetAsync(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int batchId, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkBatchJob> GetSparkBatchJobAsync(this ISparkBatchOperations operations, int batchId, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetWithHttpMessagesAsync(workspaceName, sparkPoolName, batchId, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkBatchJobWithHttpMessagesAsync(batchId, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -197,18 +161,12 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
-            public static void Delete(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int batchId)
+            public static void CancelSparkBatchJob(this ISparkBatchOperations operations, int batchId)
             {
-                operations.DeleteAsync(workspaceName, sparkPoolName, batchId).GetAwaiter().GetResult();
+                operations.CancelSparkBatchJobAsync(batchId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -217,21 +175,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='batchId'>
             /// Identifier for the batch job.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteAsync(this ISparkBatchOperations operations, string workspaceName, string sparkPoolName, int batchId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CancelSparkBatchJobAsync(this ISparkBatchOperations operations, int batchId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.DeleteWithHttpMessagesAsync(workspaceName, sparkPoolName, batchId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.CancelSparkBatchJobWithHttpMessagesAsync(batchId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }

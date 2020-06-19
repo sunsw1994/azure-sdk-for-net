@@ -39,20 +39,15 @@ namespace Microsoft.Azure.Synapse
         ServiceClientCredentials Credentials { get; }
 
         /// <summary>
+        /// The workspace development endpoint, for example
+        /// https://myworkspace.dev.azuresynapse.net.
+        /// </summary>
+        string Endpoint { get; set; }
+
+        /// <summary>
         /// The Synapse client API Version.
         /// </summary>
         string ApiVersion { get; }
-
-        /// <summary>
-        /// Gets the DNS suffix used as the base for all Synapse service
-        /// requests.
-        /// </summary>
-        string SynapseDnsSuffix { get; set; }
-
-        /// <summary>
-        /// Valid api-version for the request.
-        /// </summary>
-        string LivyApiVersion { get; set; }
 
         /// <summary>
         /// The preferred language for the response.
@@ -77,21 +72,6 @@ namespace Microsoft.Azure.Synapse
         /// Gets the IMonitoringOperations.
         /// </summary>
         IMonitoringOperations Monitoring { get; }
-
-        /// <summary>
-        /// Gets the ISparkBatchOperations.
-        /// </summary>
-        ISparkBatchOperations SparkBatch { get; }
-
-        /// <summary>
-        /// Gets the ISparkSessionOperations.
-        /// </summary>
-        ISparkSessionOperations SparkSession { get; }
-
-        /// <summary>
-        /// Gets the IWorkspaceAclOperations.
-        /// </summary>
-        IWorkspaceAclOperations WorkspaceAcl { get; }
 
     }
 }

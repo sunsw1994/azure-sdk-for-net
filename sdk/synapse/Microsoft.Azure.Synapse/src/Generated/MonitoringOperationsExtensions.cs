@@ -22,63 +22,20 @@ namespace Microsoft.Azure.Synapse
     public static partial class MonitoringOperationsExtensions
     {
             /// <summary>
-            /// Get History Server Data for a given workspace, pool, livyid, appid and
-            /// attemptId
+            /// Get list of spark applications for the workspace.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
+            /// <param name='apiVersion'>
             /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
+            /// <param name='xMsClientRequestId'>
+            /// Can provide a guid, which is helpful for debugging and to provide better
+            /// customer support
             /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            public static HistoryServerDataResponse GetHistoryServerData(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId)
+            public static SparkJobListViewResponse GetSparkJobList(this IMonitoringOperations operations, string apiVersion, string xMsClientRequestId = default(string))
             {
-                return operations.GetHistoryServerDataAsync(workspaceName, poolName, livyId, appId, attemptId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get History Server Data for a given workspace, pool, livyid, appid and
-            /// attemptId
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
-            /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<HistoryServerDataResponse> GetHistoryServerDataAsync(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetHistoryServerDataWithHttpMessagesAsync(workspaceName, poolName, livyId, appId, attemptId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                return operations.GetSparkJobListAsync(apiVersion, xMsClientRequestId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -87,231 +44,70 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
+            /// <param name='apiVersion'>
             /// </param>
-            public static SparkJobListViewResponse GetSparkJobList(this IMonitoringOperations operations, string workspaceName)
-            {
-                return operations.GetSparkJobListAsync(workspaceName).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get list of spark applications for the workspace.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
+            /// <param name='xMsClientRequestId'>
+            /// Can provide a guid, which is helpful for debugging and to provide better
+            /// customer support
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SparkJobListViewResponse> GetSparkJobListAsync(this IMonitoringOperations operations, string workspaceName, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkJobListViewResponse> GetSparkJobListAsync(this IMonitoringOperations operations, string apiVersion, string xMsClientRequestId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSparkJobListWithHttpMessagesAsync(workspaceName, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkJobListWithHttpMessagesAsync(apiVersion, xMsClientRequestId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Get one spark application details given the workspace name, pool name and
-            /// livyid.
+            /// Get SQL OD/DW Query for the workspace.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
+            /// <param name='apiVersion'>
             /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
+            /// <param name='xMsClientRequestId'>
+            /// Can provide a guid, which is helpful for debugging and to provide better
+            /// customer support
             /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
+            /// <param name='filter'>
             /// </param>
-            public static SparkJobListViewResponse GetApplicationDetails(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId)
+            /// <param name='orderby'>
+            /// </param>
+            /// <param name='skip'>
+            /// </param>
+            public static SqlQueryStringDataModel GetSqlJobQueryString(this IMonitoringOperations operations, string apiVersion, string xMsClientRequestId = default(string), string filter = default(string), string orderby = default(string), string skip = default(string))
             {
-                return operations.GetApplicationDetailsAsync(workspaceName, poolName, livyId).GetAwaiter().GetResult();
+                return operations.GetSqlJobQueryStringAsync(apiVersion, xMsClientRequestId, filter, orderby, skip).GetAwaiter().GetResult();
             }
 
             /// <summary>
-            /// Get one spark application details given the workspace name, pool name and
-            /// livyid.
+            /// Get SQL OD/DW Query for the workspace.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
+            /// <param name='apiVersion'>
             /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
+            /// <param name='xMsClientRequestId'>
+            /// Can provide a guid, which is helpful for debugging and to provide better
+            /// customer support
             /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
+            /// <param name='filter'>
+            /// </param>
+            /// <param name='orderby'>
+            /// </param>
+            /// <param name='skip'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SparkJobListViewResponse> GetApplicationDetailsAsync(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SqlQueryStringDataModel> GetSqlJobQueryStringAsync(this IMonitoringOperations operations, string apiVersion, string xMsClientRequestId = default(string), string filter = default(string), string orderby = default(string), string skip = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetApplicationDetailsWithHttpMessagesAsync(workspaceName, poolName, livyId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Get History server properties.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            public static HistoryServerPropertiesResponse GetHistoryServerProperties(this IMonitoringOperations operations, string workspaceName)
-            {
-                return operations.GetHistoryServerPropertiesAsync(workspaceName).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get History server properties.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<HistoryServerPropertiesResponse> GetHistoryServerPropertiesAsync(this IMonitoringOperations operations, string workspaceName, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetHistoryServerPropertiesWithHttpMessagesAsync(workspaceName, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Get History Server Diagnostic Data for a given workspace, pool, livyid,
-            /// appid and attemptId
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
-            /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            public static HistoryServerDiagnosticResponse GetHistoryServerDiagnostic(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId)
-            {
-                return operations.GetHistoryServerDiagnosticAsync(workspaceName, poolName, livyId, appId, attemptId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get History Server Diagnostic Data for a given workspace, pool, livyid,
-            /// appid and attemptId
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
-            /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<HistoryServerDiagnosticResponse> GetHistoryServerDiagnosticAsync(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetHistoryServerDiagnosticWithHttpMessagesAsync(workspaceName, poolName, livyId, appId, attemptId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Get History Server Graph Data for a given workspace, pool, livyid, appid
-            /// and attemptId
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
-            /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            public static HistoryServerGraphResponse GetHistoryServerGraph(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId)
-            {
-                return operations.GetHistoryServerGraphAsync(workspaceName, poolName, livyId, appId, attemptId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Get History Server Graph Data for a given workspace, pool, livyid, appid
-            /// and attemptId
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='poolName'>
-            /// The spark pool name.
-            /// </param>
-            /// <param name='livyId'>
-            /// The livy id.
-            /// </param>
-            /// <param name='appId'>
-            /// The application id.
-            /// </param>
-            /// <param name='attemptId'>
-            /// The attempt id.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<HistoryServerGraphResponse> GetHistoryServerGraphAsync(this IMonitoringOperations operations, string workspaceName, string poolName, string livyId, string appId, string attemptId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetHistoryServerGraphWithHttpMessagesAsync(workspaceName, poolName, livyId, appId, attemptId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSqlJobQueryStringWithHttpMessagesAsync(apiVersion, xMsClientRequestId, filter, orderby, skip, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

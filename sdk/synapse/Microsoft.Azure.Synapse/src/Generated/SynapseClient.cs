@@ -44,19 +44,15 @@ namespace Microsoft.Azure.Synapse
         public ServiceClientCredentials Credentials { get; private set; }
 
         /// <summary>
+        /// The workspace development endpoint, for example
+        /// https://myworkspace.dev.azuresynapse.net.
+        /// </summary>
+        public string Endpoint { get; set; }
+
+        /// <summary>
         /// The Synapse client API Version.
         /// </summary>
         public string ApiVersion { get; private set; }
-
-        /// <summary>
-        /// Gets the DNS suffix used as the base for all Synapse service requests.
-        /// </summary>
-        public string SynapseDnsSuffix { get; set; }
-
-        /// <summary>
-        /// Valid api-version for the request.
-        /// </summary>
-        public string LivyApiVersion { get; set; }
 
         /// <summary>
         /// The preferred language for the response.
@@ -80,21 +76,6 @@ namespace Microsoft.Azure.Synapse
         /// Gets the IMonitoringOperations.
         /// </summary>
         public virtual IMonitoringOperations Monitoring { get; private set; }
-
-        /// <summary>
-        /// Gets the ISparkBatchOperations.
-        /// </summary>
-        public virtual ISparkBatchOperations SparkBatch { get; private set; }
-
-        /// <summary>
-        /// Gets the ISparkSessionOperations.
-        /// </summary>
-        public virtual ISparkSessionOperations SparkSession { get; private set; }
-
-        /// <summary>
-        /// Gets the IWorkspaceAclOperations.
-        /// </summary>
-        public virtual IWorkspaceAclOperations WorkspaceAcl { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the SynapseClient class.
@@ -224,13 +205,8 @@ namespace Microsoft.Azure.Synapse
         private void Initialize()
         {
             Monitoring = new MonitoringOperations(this);
-            SparkBatch = new SparkBatchOperations(this);
-            SparkSession = new SparkSessionOperations(this);
-            WorkspaceAcl = new WorkspaceAclOperations(this);
-            BaseUri = "https://{workspaceName}.{SynapseDnsSuffix}";
+            BaseUri = "{endpoint}";
             ApiVersion = "2019-11-01-preview";
-            SynapseDnsSuffix = "dev.azuresynapse.net";
-            LivyApiVersion = "2019-11-01-preview";
             AcceptLanguage = "en-US";
             LongRunningOperationRetryTimeout = 30;
             GenerateClientRequestId = true;

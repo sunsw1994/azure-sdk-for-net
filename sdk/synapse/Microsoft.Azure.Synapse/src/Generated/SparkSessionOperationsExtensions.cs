@@ -27,12 +27,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='fromParameter'>
             /// Optional param specifying which index the list should begin from.
             /// </param>
@@ -44,9 +38,9 @@ namespace Microsoft.Azure.Synapse
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivyListSessionResponse List(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?))
+            public static SparkSessionCollection GetSparkSessions(this ISparkSessionOperations operations, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?))
             {
-                return operations.ListAsync(workspaceName, sparkPoolName, fromParameter, size, detailed).GetAwaiter().GetResult();
+                return operations.GetSparkSessionsAsync(fromParameter, size, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -55,12 +49,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='fromParameter'>
             /// Optional param specifying which index the list should begin from.
             /// </param>
@@ -75,9 +63,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivyListSessionResponse> ListAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkSessionCollection> GetSparkSessionsAsync(this ISparkSessionOperations operations, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ListWithHttpMessagesAsync(workspaceName, sparkPoolName, fromParameter, size, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkSessionsWithHttpMessagesAsync(fromParameter, size, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -89,22 +77,16 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkSessionOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='detailed'>
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivySessionResponse Create(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, ExtendedLivySessionRequest livyRequest, bool? detailed = default(bool?))
+            public static SparkSession CreateSparkSession(this ISparkSessionOperations operations, SparkSessionOptions sparkSessionOptions, bool? detailed = default(bool?))
             {
-                return operations.CreateAsync(workspaceName, sparkPoolName, livyRequest, detailed).GetAwaiter().GetResult();
+                return operations.CreateSparkSessionAsync(sparkSessionOptions, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -113,13 +95,7 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkSessionOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='detailed'>
@@ -129,9 +105,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivySessionResponse> CreateAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, ExtendedLivySessionRequest livyRequest, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkSession> CreateSparkSessionAsync(this ISparkSessionOperations operations, SparkSessionOptions sparkSessionOptions, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(workspaceName, sparkPoolName, livyRequest, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateSparkSessionWithHttpMessagesAsync(sparkSessionOptions, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -143,12 +119,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
@@ -156,9 +126,9 @@ namespace Microsoft.Azure.Synapse
             /// Optional query param specifying whether detailed response is returned
             /// beyond plain livy.
             /// </param>
-            public static ExtendedLivySessionResponse Get(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, bool? detailed = default(bool?))
+            public static SparkSession GetSparkSession(this ISparkSessionOperations operations, int sessionId, bool? detailed = default(bool?))
             {
-                return operations.GetAsync(workspaceName, sparkPoolName, sessionId, detailed).GetAwaiter().GetResult();
+                return operations.GetSparkSessionAsync(sessionId, detailed).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -167,12 +137,6 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
@@ -183,9 +147,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ExtendedLivySessionResponse> GetAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkSession> GetSparkSessionAsync(this ISparkSessionOperations operations, int sessionId, bool? detailed = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, detailed, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkSessionWithHttpMessagesAsync(sessionId, detailed, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -197,19 +161,12 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand"
-            /// targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            public static void Delete(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId)
+            public static void CancelSparkSession(this ISparkSessionOperations operations, int sessionId)
             {
-                operations.DeleteAsync(workspaceName, sparkPoolName, sessionId).GetAwaiter().GetResult();
+                operations.CancelSparkSessionAsync(sessionId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -218,22 +175,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand"
-            /// targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CancelSparkSessionAsync(this ISparkSessionOperations operations, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.DeleteWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.CancelSparkSessionWithHttpMessagesAsync(sessionId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -243,19 +193,12 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand"
-            /// targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            public static void ResetTimeout(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId)
+            public static void ResetSparkSessionTimeout(this ISparkSessionOperations operations, int sessionId)
             {
-                operations.ResetTimeoutAsync(workspaceName, sparkPoolName, sessionId).GetAwaiter().GetResult();
+                operations.ResetSparkSessionTimeoutAsync(sessionId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -265,22 +208,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand"
-            /// targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ResetTimeoutAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task ResetSparkSessionTimeoutAsync(this ISparkSessionOperations operations, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ResetTimeoutWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.ResetSparkSessionTimeoutWithHttpMessagesAsync(sessionId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -289,18 +225,12 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            public static LivyStatementsResponseBody ListStatements(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId)
+            public static SparkStatementCollection GetSparkStatements(this ISparkSessionOperations operations, int sessionId)
             {
-                return operations.ListStatementsAsync(workspaceName, sparkPoolName, sessionId).GetAwaiter().GetResult();
+                return operations.GetSparkStatementsAsync(sessionId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -309,21 +239,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementsResponseBody> ListStatementsAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkStatementCollection> GetSparkStatementsAsync(this ISparkSessionOperations operations, int sessionId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ListStatementsWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkStatementsWithHttpMessagesAsync(sessionId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -335,21 +259,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkStatementOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
-            public static LivyStatementResponseBody CreateStatement(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, LivyStatementRequestBody livyRequest)
+            public static SparkStatement CreateSparkStatement(this ISparkSessionOperations operations, int sessionId, SparkStatementOptions sparkStatementOptions)
             {
-                return operations.CreateStatementAsync(workspaceName, sparkPoolName, sessionId, livyRequest).GetAwaiter().GetResult();
+                return operations.CreateSparkStatementAsync(sessionId, sparkStatementOptions).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -358,24 +276,18 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
-            /// <param name='livyRequest'>
+            /// <param name='sparkStatementOptions'>
             /// Livy compatible batch job request payload.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementResponseBody> CreateStatementAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, LivyStatementRequestBody livyRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkStatement> CreateSparkStatementAsync(this ISparkSessionOperations operations, int sessionId, SparkStatementOptions sparkStatementOptions, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CreateStatementWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, livyRequest, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CreateSparkStatementWithHttpMessagesAsync(sessionId, sparkStatementOptions, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -387,21 +299,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='statementId'>
             /// Identifier for the statement.
             /// </param>
-            public static LivyStatementResponseBody GetStatement(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, int statementId)
+            public static SparkStatement GetSparkStatement(this ISparkSessionOperations operations, int sessionId, int statementId)
             {
-                return operations.GetStatementAsync(workspaceName, sparkPoolName, sessionId, statementId).GetAwaiter().GetResult();
+                return operations.GetSparkStatementAsync(sessionId, statementId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -409,12 +315,6 @@ namespace Microsoft.Azure.Synapse
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
             /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
@@ -425,9 +325,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementResponseBody> GetStatementAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, int statementId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkStatement> GetSparkStatementAsync(this ISparkSessionOperations operations, int sessionId, int statementId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetStatementWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, statementId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSparkStatementWithHttpMessagesAsync(sessionId, statementId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -439,21 +339,15 @@ namespace Microsoft.Azure.Synapse
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
-            /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
             /// </param>
             /// <param name='statementId'>
             /// Identifier for the statement.
             /// </param>
-            public static LivyStatementCancellationResponse DeleteStatement(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, int statementId)
+            public static SparkStatementCancellationResult CancelSparkStatement(this ISparkSessionOperations operations, int sessionId, int statementId)
             {
-                return operations.DeleteStatementAsync(workspaceName, sparkPoolName, sessionId, statementId).GetAwaiter().GetResult();
+                return operations.CancelSparkStatementAsync(sessionId, statementId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -461,12 +355,6 @@ namespace Microsoft.Azure.Synapse
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
-            /// </param>
-            /// <param name='workspaceName'>
-            /// The name of the workspace to execute operations on.
-            /// </param>
-            /// <param name='sparkPoolName'>
-            /// Name of the spark pool. "ondemand" targets the ondemand pool.
             /// </param>
             /// <param name='sessionId'>
             /// Identifier for the session.
@@ -477,9 +365,9 @@ namespace Microsoft.Azure.Synapse
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<LivyStatementCancellationResponse> DeleteStatementAsync(this ISparkSessionOperations operations, string workspaceName, string sparkPoolName, int sessionId, int statementId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SparkStatementCancellationResult> CancelSparkStatementAsync(this ISparkSessionOperations operations, int sessionId, int statementId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeleteStatementWithHttpMessagesAsync(workspaceName, sparkPoolName, sessionId, statementId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CancelSparkStatementWithHttpMessagesAsync(sessionId, statementId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

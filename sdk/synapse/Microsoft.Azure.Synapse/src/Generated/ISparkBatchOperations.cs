@@ -27,12 +27,6 @@ namespace Microsoft.Azure.Synapse
         /// List all spark batch jobs which are running under a particular
         /// spark pool.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='fromParameter'>
         /// Optional param specifying which index the list should begin from.
         /// </param>
@@ -59,17 +53,11 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivyListBatchResponse>> ListWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJobCollection>> GetSparkBatchJobsWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Create new spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkBatchJobOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='detailed'>
@@ -91,16 +79,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivyBatchResponse>> CreateWithHttpMessagesAsync(string workspaceName, string sparkPoolName, ExtendedLivyBatchRequest livyRequest, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJob>> CreateSparkBatchJobWithHttpMessagesAsync(SparkBatchJobOptions sparkBatchJobOptions, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Gets a single spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
@@ -123,16 +105,10 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<ExtendedLivyBatchResponse>> GetWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int batchId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkBatchJob>> GetSparkBatchJobWithHttpMessagesAsync(int batchId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Cancels a running spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
@@ -148,6 +124,6 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse> CancelSparkBatchJobWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

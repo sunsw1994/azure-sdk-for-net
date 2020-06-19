@@ -28,7 +28,7 @@ namespace Microsoft.Azure.Synapse.Models
         /// <summary>
         /// Initializes a new instance of the SparkJob class.
         /// </summary>
-        public SparkJob(string state = default(string), string name = default(string), string submitter = default(string), string compute = default(string), string sparkApplicationId = default(string), string livyId = default(string), IList<string> timing = default(IList<string>), string sparkJobDefinition = default(string), IList<SparkJob> pipeline = default(IList<SparkJob>), string jobType = default(string), System.DateTimeOffset? submitTime = default(System.DateTimeOffset?), System.DateTimeOffset? endTime = default(System.DateTimeOffset?), string queuedDuration = default(string), string runningDuration = default(string), string totalDuration = default(string))
+        public SparkJob(string state = default(string), string name = default(string), string submitter = default(string), string compute = default(string), string sparkApplicationId = default(string), string livyId = default(string), IList<string> timing = default(IList<string>), string sparkJobDefinition = default(string), IList<SparkJob> pipeline = default(IList<SparkJob>), string jobType = default(string), System.DateTime? submitTime = default(System.DateTime?), System.DateTime? endTime = default(System.DateTime?), string queuedDuration = default(string), string runningDuration = default(string), string totalDuration = default(string))
         {
             State = state;
             Name = name;
@@ -106,12 +106,12 @@ namespace Microsoft.Azure.Synapse.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "submitTime")]
-        public System.DateTimeOffset? SubmitTime { get; set; }
+        public System.DateTime? SubmitTime { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "endTime")]
-        public System.DateTimeOffset? EndTime { get; set; }
+        public System.DateTime? EndTime { get; set; }
 
         /// <summary>
         /// </summary>

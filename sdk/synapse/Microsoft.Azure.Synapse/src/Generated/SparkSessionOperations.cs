@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Synapse
     /// <summary>
     /// SparkSessionOperations operations.
     /// </summary>
-    internal partial class SparkSessionOperations : IServiceOperations<SynapseClient>, ISparkSessionOperations
+    internal partial class SparkSessionOperations : IServiceOperations<SparkClient>, ISparkSessionOperations
     {
         /// <summary>
         /// Initializes a new instance of the SparkSessionOperations class.
@@ -36,7 +36,7 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        internal SparkSessionOperations(SynapseClient client)
+        internal SparkSessionOperations(SparkClient client)
         {
             if (client == null)
             {
@@ -46,19 +46,13 @@ namespace Microsoft.Azure.Synapse
         }
 
         /// <summary>
-        /// Gets a reference to the SynapseClient
+        /// Gets a reference to the SparkClient
         /// </summary>
-        public SynapseClient Client { get; private set; }
+        public SparkClient Client { get; private set; }
 
         /// <summary>
         /// List all spark sessions which are running under a particular spark pool.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='fromParameter'>
         /// Optional param specifying which index the list should begin from.
         /// </param>
@@ -91,23 +85,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivyListSessionResponse>> ListWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSessionCollection>> GetSparkSessionsWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -116,21 +106,18 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("fromParameter", fromParameter);
                 tracingParameters.Add("size", size);
                 tracingParameters.Add("detailed", detailed);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "List", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkSessions", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             List<string> _queryParameters = new List<string>();
             if (fromParameter != null)
             {
@@ -237,7 +224,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivyListSessionResponse>();
+            var _result = new AzureOperationResponse<SparkSessionCollection>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -250,7 +237,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivyListSessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSessionCollection>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -272,13 +259,7 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Create new spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkSessionOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='detailed'>
@@ -306,27 +287,27 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivySessionResponse>> CreateWithHttpMessagesAsync(string workspaceName, string sparkPoolName, ExtendedLivySessionRequest livyRequest, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSession>> CreateSparkSessionWithHttpMessagesAsync(SparkSessionOptions sparkSessionOptions, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
-            if (livyRequest == null)
+            if (sparkSessionOptions == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "livyRequest");
+                throw new ValidationException(ValidationRules.CannotBeNull, "sparkSessionOptions");
+            }
+            if (sparkSessionOptions != null)
+            {
+                sparkSessionOptions.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -335,20 +316,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("detailed", detailed);
-                tracingParameters.Add("livyRequest", livyRequest);
+                tracingParameters.Add("sparkSessionOptions", sparkSessionOptions);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Create", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CreateSparkSession", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             List<string> _queryParameters = new List<string>();
             if (detailed != null)
             {
@@ -392,9 +370,9 @@ namespace Microsoft.Azure.Synapse
 
             // Serialize Request
             string _requestContent = null;
-            if(livyRequest != null)
+            if(sparkSessionOptions != null)
             {
-                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(livyRequest, Client.SerializationSettings);
+                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(sparkSessionOptions, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -453,7 +431,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivySessionResponse>();
+            var _result = new AzureOperationResponse<SparkSession>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -466,7 +444,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivySessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSession>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -488,12 +466,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Gets a single spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -522,23 +494,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivySessionResponse>> GetWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkSession>> GetSparkSessionWithHttpMessagesAsync(int sessionId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -547,20 +515,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("detailed", detailed);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Get", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkSession", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (detailed != null)
@@ -660,7 +625,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivySessionResponse>();
+            var _result = new AzureOperationResponse<SparkSession>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -673,7 +638,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivySessionResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkSession>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -695,13 +660,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Cancels a running spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand"
-        /// targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -723,23 +681,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> CancelSparkSessionWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -748,19 +702,16 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CancelSparkSession", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
@@ -874,13 +825,6 @@ namespace Microsoft.Azure.Synapse
         /// Sends a keep alive call to the current session to reset the session
         /// timeout.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand"
-        /// targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -902,23 +846,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> ResetTimeoutWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> ResetSparkSessionTimeoutWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -927,19 +867,16 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "ResetTimeout", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "ResetSparkSessionTimeout", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}/reset-timeout";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}/reset-timeout";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
@@ -1052,12 +989,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Gets a list of statements within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -1082,23 +1013,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementsResponseBody>> ListStatementsWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatementCollection>> GetSparkStatementsWithHttpMessagesAsync(int sessionId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1107,19 +1034,16 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "ListStatements", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkStatements", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}/statements";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}/statements";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
@@ -1215,7 +1139,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementsResponseBody>();
+            var _result = new AzureOperationResponse<SparkStatementCollection>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1228,7 +1152,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementsResponseBody>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatementCollection>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1250,16 +1174,10 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Create statement within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkStatementOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='customHeaders'>
@@ -1283,27 +1201,23 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponseBody>> CreateStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, LivyStatementRequestBody livyRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatement>> CreateSparkStatementWithHttpMessagesAsync(int sessionId, SparkStatementOptions sparkStatementOptions, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
-            if (livyRequest == null)
+            if (sparkStatementOptions == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "livyRequest");
+                throw new ValidationException(ValidationRules.CannotBeNull, "sparkStatementOptions");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1312,20 +1226,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
-                tracingParameters.Add("livyRequest", livyRequest);
+                tracingParameters.Add("sparkStatementOptions", sparkStatementOptions);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "CreateStatement", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CreateSparkStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}/statements";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}/statements";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
@@ -1366,9 +1277,9 @@ namespace Microsoft.Azure.Synapse
 
             // Serialize Request
             string _requestContent = null;
-            if(livyRequest != null)
+            if(sparkStatementOptions != null)
             {
-                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(livyRequest, Client.SerializationSettings);
+                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(sparkStatementOptions, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -1427,7 +1338,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementResponseBody>();
+            var _result = new AzureOperationResponse<SparkStatement>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1440,7 +1351,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementResponseBody>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatement>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1462,12 +1373,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Gets a single statement within a spark session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -1495,23 +1400,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementResponseBody>> GetStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatement>> GetSparkStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1520,20 +1421,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("statementId", statementId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "GetStatement", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}/statements/{statementId}";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}/statements/{statementId}";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             _url = _url.Replace("{statementId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(statementId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
@@ -1630,7 +1528,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementResponseBody>();
+            var _result = new AzureOperationResponse<SparkStatement>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1643,7 +1541,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementResponseBody>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatement>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1665,12 +1563,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Kill a statement within a session.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='sessionId'>
         /// Identifier for the session.
         /// </param>
@@ -1698,23 +1590,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<LivyStatementCancellationResponse>> DeleteStatementWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkStatementCancellationResult>> CancelSparkStatementWithHttpMessagesAsync(int sessionId, int statementId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1723,20 +1611,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("sessionId", sessionId);
                 tracingParameters.Add("statementId", statementId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "DeleteStatement", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CancelSparkStatement", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/sessions/{sessionId}/statements/{statementId}/cancel";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "sessions/{sessionId}/statements/{statementId}/cancel";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{sessionId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(sessionId, Client.SerializationSettings).Trim('"')));
             _url = _url.Replace("{statementId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(statementId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
@@ -1833,7 +1718,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<LivyStatementCancellationResponse>();
+            var _result = new AzureOperationResponse<SparkStatementCancellationResult>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -1846,7 +1731,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<LivyStatementCancellationResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkStatementCancellationResult>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

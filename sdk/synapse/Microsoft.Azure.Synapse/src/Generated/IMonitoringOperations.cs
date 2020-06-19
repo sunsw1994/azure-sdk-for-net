@@ -24,45 +24,13 @@ namespace Microsoft.Azure.Synapse
     public partial interface IMonitoringOperations
     {
         /// <summary>
-        /// Get History Server Data for a given workspace, pool, livyid, appid
-        /// and attemptId
-        /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='poolName'>
-        /// The spark pool name.
-        /// </param>
-        /// <param name='livyId'>
-        /// The livy id.
-        /// </param>
-        /// <param name='appId'>
-        /// The application id.
-        /// </param>
-        /// <param name='attemptId'>
-        /// The attempt id.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.Azure.CloudException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        Task<AzureOperationResponse<HistoryServerDataResponse>> GetHistoryServerDataWithHttpMessagesAsync(string workspaceName, string poolName, string livyId, string appId, string attemptId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
         /// Get list of spark applications for the workspace.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
+        /// <param name='apiVersion'>
+        /// </param>
+        /// <param name='xMsClientRequestId'>
+        /// Can provide a guid, which is helpful for debugging and to provide
+        /// better customer support
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -79,19 +47,21 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<SparkJobListViewResponse>> GetSparkJobListWithHttpMessagesAsync(string workspaceName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SparkJobListViewResponse>> GetSparkJobListWithHttpMessagesAsync(string apiVersion, string xMsClientRequestId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get one spark application details given the workspace name, pool
-        /// name and livyid.
+        /// Get SQL OD/DW Query for the workspace.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
+        /// <param name='apiVersion'>
         /// </param>
-        /// <param name='poolName'>
-        /// The spark pool name.
+        /// <param name='xMsClientRequestId'>
+        /// Can provide a guid, which is helpful for debugging and to provide
+        /// better customer support
         /// </param>
-        /// <param name='livyId'>
-        /// The livy id.
+        /// <param name='filter'>
+        /// </param>
+        /// <param name='orderby'>
+        /// </param>
+        /// <param name='skip'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -108,98 +78,6 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<AzureOperationResponse<SparkJobListViewResponse>> GetApplicationDetailsWithHttpMessagesAsync(string workspaceName, string poolName, string livyId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
-        /// Get History server properties.
-        /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.Azure.CloudException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        Task<AzureOperationResponse<HistoryServerPropertiesResponse>> GetHistoryServerPropertiesWithHttpMessagesAsync(string workspaceName, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
-        /// Get History Server Diagnostic Data for a given workspace, pool,
-        /// livyid, appid and attemptId
-        /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='poolName'>
-        /// The spark pool name.
-        /// </param>
-        /// <param name='livyId'>
-        /// The livy id.
-        /// </param>
-        /// <param name='appId'>
-        /// The application id.
-        /// </param>
-        /// <param name='attemptId'>
-        /// The attempt id.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.Azure.CloudException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        Task<AzureOperationResponse<HistoryServerDiagnosticResponse>> GetHistoryServerDiagnosticWithHttpMessagesAsync(string workspaceName, string poolName, string livyId, string appId, string attemptId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-        /// <summary>
-        /// Get History Server Graph Data for a given workspace, pool, livyid,
-        /// appid and attemptId
-        /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='poolName'>
-        /// The spark pool name.
-        /// </param>
-        /// <param name='livyId'>
-        /// The livy id.
-        /// </param>
-        /// <param name='appId'>
-        /// The application id.
-        /// </param>
-        /// <param name='attemptId'>
-        /// The attempt id.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        /// <exception cref="Microsoft.Rest.Azure.CloudException">
-        /// Thrown when the operation returned an invalid status code
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.SerializationException">
-        /// Thrown when unable to deserialize the response
-        /// </exception>
-        /// <exception cref="Microsoft.Rest.ValidationException">
-        /// Thrown when a required parameter is null
-        /// </exception>
-        Task<AzureOperationResponse<HistoryServerGraphResponse>> GetHistoryServerGraphWithHttpMessagesAsync(string workspaceName, string poolName, string livyId, string appId, string attemptId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<AzureOperationResponse<SqlQueryStringDataModel>> GetSqlJobQueryStringWithHttpMessagesAsync(string apiVersion, string xMsClientRequestId = default(string), string filter = default(string), string orderby = default(string), string skip = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

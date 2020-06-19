@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Synapse
     /// <summary>
     /// SparkBatchOperations operations.
     /// </summary>
-    internal partial class SparkBatchOperations : IServiceOperations<SynapseClient>, ISparkBatchOperations
+    internal partial class SparkBatchOperations : IServiceOperations<SparkClient>, ISparkBatchOperations
     {
         /// <summary>
         /// Initializes a new instance of the SparkBatchOperations class.
@@ -36,7 +36,7 @@ namespace Microsoft.Azure.Synapse
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        internal SparkBatchOperations(SynapseClient client)
+        internal SparkBatchOperations(SparkClient client)
         {
             if (client == null)
             {
@@ -46,19 +46,13 @@ namespace Microsoft.Azure.Synapse
         }
 
         /// <summary>
-        /// Gets a reference to the SynapseClient
+        /// Gets a reference to the SparkClient
         /// </summary>
-        public SynapseClient Client { get; private set; }
+        public SparkClient Client { get; private set; }
 
         /// <summary>
         /// List all spark batch jobs which are running under a particular spark pool.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='fromParameter'>
         /// Optional param specifying which index the list should begin from.
         /// </param>
@@ -91,23 +85,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivyListBatchResponse>> ListWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkBatchJobCollection>> GetSparkBatchJobsWithHttpMessagesAsync(int? fromParameter = default(int?), int? size = default(int?), bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -116,21 +106,18 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("fromParameter", fromParameter);
                 tracingParameters.Add("size", size);
                 tracingParameters.Add("detailed", detailed);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "List", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkBatchJobs", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/batches";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "batches";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             List<string> _queryParameters = new List<string>();
             if (fromParameter != null)
             {
@@ -237,7 +224,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivyListBatchResponse>();
+            var _result = new AzureOperationResponse<SparkBatchJobCollection>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -250,7 +237,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivyListBatchResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkBatchJobCollection>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -272,13 +259,7 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Create new spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
-        /// <param name='livyRequest'>
+        /// <param name='sparkBatchJobOptions'>
         /// Livy compatible batch job request payload.
         /// </param>
         /// <param name='detailed'>
@@ -306,27 +287,27 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivyBatchResponse>> CreateWithHttpMessagesAsync(string workspaceName, string sparkPoolName, ExtendedLivyBatchRequest livyRequest, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkBatchJob>> CreateSparkBatchJobWithHttpMessagesAsync(SparkBatchJobOptions sparkBatchJobOptions, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
-            if (livyRequest == null)
+            if (sparkBatchJobOptions == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "livyRequest");
+                throw new ValidationException(ValidationRules.CannotBeNull, "sparkBatchJobOptions");
+            }
+            if (sparkBatchJobOptions != null)
+            {
+                sparkBatchJobOptions.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -335,20 +316,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("detailed", detailed);
-                tracingParameters.Add("livyRequest", livyRequest);
+                tracingParameters.Add("sparkBatchJobOptions", sparkBatchJobOptions);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Create", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CreateSparkBatchJob", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/batches";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "batches";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             List<string> _queryParameters = new List<string>();
             if (detailed != null)
             {
@@ -392,9 +370,9 @@ namespace Microsoft.Azure.Synapse
 
             // Serialize Request
             string _requestContent = null;
-            if(livyRequest != null)
+            if(sparkBatchJobOptions != null)
             {
-                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(livyRequest, Client.SerializationSettings);
+                _requestContent = Rest.Serialization.SafeJsonConvert.SerializeObject(sparkBatchJobOptions, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
                 _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
@@ -453,7 +431,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivyBatchResponse>();
+            var _result = new AzureOperationResponse<SparkBatchJob>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -466,7 +444,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivyBatchResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkBatchJob>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -488,12 +466,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Gets a single spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
@@ -522,23 +494,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse<ExtendedLivyBatchResponse>> GetWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int batchId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse<SparkBatchJob>> GetSparkBatchJobWithHttpMessagesAsync(int batchId, bool? detailed = default(bool?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -547,20 +515,17 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("batchId", batchId);
                 tracingParameters.Add("detailed", detailed);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Get", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "GetSparkBatchJob", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/batches/{batchId}";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "batches/{batchId}";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{batchId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(batchId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (detailed != null)
@@ -660,7 +625,7 @@ namespace Microsoft.Azure.Synapse
                 throw ex;
             }
             // Create Result
-            var _result = new AzureOperationResponse<ExtendedLivyBatchResponse>();
+            var _result = new AzureOperationResponse<SparkBatchJob>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             if (_httpResponse.Headers.Contains("x-ms-request-id"))
@@ -673,7 +638,7 @@ namespace Microsoft.Azure.Synapse
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ExtendedLivyBatchResponse>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<SparkBatchJob>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -695,12 +660,6 @@ namespace Microsoft.Azure.Synapse
         /// <summary>
         /// Cancels a running spark batch job.
         /// </summary>
-        /// <param name='workspaceName'>
-        /// The name of the workspace to execute operations on.
-        /// </param>
-        /// <param name='sparkPoolName'>
-        /// Name of the spark pool. "ondemand" targets the ondemand pool.
-        /// </param>
         /// <param name='batchId'>
         /// Identifier for the batch job.
         /// </param>
@@ -722,23 +681,19 @@ namespace Microsoft.Azure.Synapse
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<AzureOperationResponse> DeleteWithHttpMessagesAsync(string workspaceName, string sparkPoolName, int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AzureOperationResponse> CancelSparkBatchJobWithHttpMessagesAsync(int batchId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (workspaceName == null)
+            if (Client.Endpoint == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "workspaceName");
-            }
-            if (Client.SynapseDnsSuffix == null)
-            {
-                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SynapseDnsSuffix");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.Endpoint");
             }
             if (Client.LivyApiVersion == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.LivyApiVersion");
             }
-            if (sparkPoolName == null)
+            if (Client.SparkPoolName == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "sparkPoolName");
+                throw new ValidationException(ValidationRules.CannotBeNull, "this.Client.SparkPoolName");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -747,19 +702,16 @@ namespace Microsoft.Azure.Synapse
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("workspaceName", workspaceName);
-                tracingParameters.Add("sparkPoolName", sparkPoolName);
                 tracingParameters.Add("batchId", batchId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
-                ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
+                ServiceClientTracing.Enter(_invocationId, this, "CancelSparkBatchJob", tracingParameters);
             }
             // Construct URL
             var _baseUrl = Client.BaseUri;
-            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "livyApi/versions/{livyApiVersion}/sparkPools/{sparkPoolName}/batches/{batchId}";
-            _url = _url.Replace("{workspaceName}", workspaceName);
-            _url = _url.Replace("{SynapseDnsSuffix}", Client.SynapseDnsSuffix);
+            var _url = _baseUrl + (_baseUrl.EndsWith("/") ? "" : "/") + "batches/{batchId}";
+            _url = _url.Replace("{endpoint}", Client.Endpoint);
             _url = _url.Replace("{livyApiVersion}", Client.LivyApiVersion);
-            _url = _url.Replace("{sparkPoolName}", System.Uri.EscapeDataString(sparkPoolName));
+            _url = _url.Replace("{sparkPoolName}", Client.SparkPoolName);
             _url = _url.Replace("{batchId}", System.Uri.EscapeDataString(Rest.Serialization.SafeJsonConvert.SerializeObject(batchId, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
